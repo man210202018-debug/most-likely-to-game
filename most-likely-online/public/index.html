@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>مين أكتر واحد فينا؟ 💕</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<script src="/socket.io/socket.io.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--rose:#b76e79;--rose-light:#d4a0a7;--rose-gold:#e8c4c8;
+--purple-deep:#2d1b4e;--purple-mid:#4a2c6e;--purple-light:#6b3fa0;
+--dark-bg:#1a1025;--dark-card:#241635;--text-primary:#f0e6f6;
+--text-secondary:#b8a5c8;--accent-pink:#ff6b9d;--accent-gold:#f0c27f;
+--gradient-main:linear-gradient(135deg,#b76e79,#6b3fa0);
+--gradient-card:linear-gradient(145deg,#2d1b4e,#1a1025);
+--shadow-glow:0 0 40px rgba(183,110,121,0.15);
+}
+body{font-family:'Tajawal',sans-serif;background:var(--dark-bg);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
+.bg-deco{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.bg-deco .c{position:absolute;border-radius:50%;filter:blur(80px);opacity:.12;animation:fb 20s ease-in-out infinite}
+.bg-deco .c:nth-child(1){width:400px;height:400px;background:var(--rose);top:-100px;right:-100px}
+.bg-deco .c:nth-child(2){width:350px;height:350px;background:var(--purple-light);bottom:-80px;left:-80px;animation-delay:-7s}
+.bg-deco .c:nth-child(3){width:250px;height:250px;background:var(--accent-pink);top:50%;left:50%;animation-delay:-14s}
+@keyframes fb{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(30px,-40px) scale(1.05)}50%{transform:translate(-20px,20px) scale(.95)}75%{transform:translate(40px,30px) scale(1.02)}}
+.screen{display:none;position:relative;z-index:1;min-height:100vh;padding:20px;animation:fiu .6s ease-out}
+.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+@keyframes fiu{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes hb{0%,100%{transform:scale(1)}15%{transform:scale(1.15)}30%{transform:scale(1)}45%{transform:scale(1.1)}60%{transform:scale(1)}}
+@keyframes bounceIn{0%{transform:scale(.3);opacity:0}50%{transform:scale(1.05)}70%{transform:scale(.95)}100%{transform:scale(1);opacity:1}}
+@keyframes confetti-fall{0%{transform:translateY(-100vh) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0) rotate(0deg)}50%{opacity:1;transform:scale(1) rotate(180deg)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes typing{0%{width:0}100%{width:100%}}
+@keyframes blink{0%,100%{border-color:var(--rose)}50%{border-color:transparent}}
+
+.card{background:var(--gradient-card);border:1px solid rgba(183,110,121,.2);border-radius:24px;padding:36px 28px;max-width:460px;width:100%;text-align:center;box-shadow:var(--shadow-glow);animation:scaleIn .6s ease-out}
+.emoji-big{font-size:60px;display:block;margin-bottom:16px;animation:hb 2s ease-in-out infinite}
+.title{font-size:28px;font-weight:900;background:var(--gradient-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;line-height:1.4}
+.subtitle{color:var(--text-secondary);font-size:15px;margin-bottom:28px;line-height:1.8}
+
+.input-group{margin-bottom:16px;text-align:right}
+.input-group label{display:block;font-size:14px;color:var(--text-secondary);margin-bottom:8px;font-weight:500}
+.input-group input{width:100%;padding:14px 18px;border:2px solid rgba(183,110,121,.3);border-radius:14px;background:rgba(26,16,37,.8);color:var(--text-primary);font-family:'Tajawal',sans-serif;font-size:16px;outline:none;transition:all .3s}
+.input-group input::placeholder{color:rgba(184,165,200,.4)}
+.input-group input:focus{border-color:var(--rose);box-shadow:0 0 20px rgba(183,110,121,.2)}
+
+.btn{width:100%;padding:16px;border:none;border-radius:14px;background:var(--gradient-main);color:#fff;font-family:'Tajawal',sans-serif;font-size:18px;font-weight:700;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transition:left .5s}
+.btn:hover::before{left:100%}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(183,110,121,.4)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.btn-outline{background:transparent;border:2px solid rgba(183,110,121,.4);color:var(--rose-light)}
+.btn-outline:hover{border-color:var(--rose);background:rgba(183,110,121,.1)}
+
+.btn-secondary{background:rgba(107,63,160,.3);border:2px solid rgba(107,63,160,.5);color:#a78bfa}
+.btn-secondary:hover{background:rgba(107,63,160,.5);border-color:#a78bfa}
+
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--rose);font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--rose),transparent)}
+
+.btn-row{display:flex;gap:12px;margin-top:16px}
+.btn-row .btn{flex:1}
+
+.room-code-display{margin:20px 0;padding:20px;background:rgba(26,16,37,.6);border:2px dashed var(--rose);border-radius:16px;text-align:center}
+.room-code-display .code{font-size:42px;font-weight:900;letter-spacing:8px;background:var(--gradient-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:monospace}
+.room-code-display .code-label{font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+.copy-btn{margin-top:12px;padding:8px 20px;border:1px solid rgba(183,110,121,.4);border-radius:10px;background:transparent;color:var(--rose-light);font-family:'Tajawal',sans-serif;font-size:13px;cursor:pointer;transition:all .3s}
+.copy-btn:hover{background:rgba(183,110,121,.15);border-color:var(--rose)}
+
+.waiting-status{margin:24px 0;text-align:center}
+.waiting-status .partner-name{font-size:20px;font-weight:800;color:var(--accent-gold);margin:8px 0}
+.waiting-dots{display:inline-flex;gap:6px;margin-top:12px}
+.waiting-dots span{width:10px;height:10px;border-radius:50%;background:var(--rose);animation:pulse 1.4s ease-in-out infinite}
+.waiting-dots span:nth-child(2){animation-delay:.2s}
+.waiting-dots span:nth-child(3){animation-delay:.4s}
+
+.connection-bar{position:fixed;top:0;left:0;right:0;padding:8px;text-align:center;font-size:12px;font-weight:600;z-index:999;transition:all .3s;transform:translateY(-100%)}
+.connection-bar.show{transform:translateY(0)}
+.connection-bar.connected{background:rgba(72,187,120,.2);color:#48bb78;border-bottom:1px solid rgba(72,187,120,.3)}
+.connection-bar.disconnected{background:rgba(245,101,101,.2);color:#f56565;border-bottom:1px solid rgba(245,101,101,.3)}
+.connection-bar.reconnecting{background:rgba(237,137,54,.2);color:#ed8936;border-bottom:1px solid rgba(237,137,54,.3)}
+
+.game-header{width:100%;max-width:460px;display:flex;justify-content:space-between;align-items:center}
+.progress-info{font-size:14px;color:var(--text-secondary);font-weight:500}
+.progress-bar{width:100%;max-width:460px;height:6px;background:rgba(107,63,160,.3);border-radius:3px;overflow:hidden;margin:8px 0}
+.progress-fill{height:100%;background:var(--gradient-main);border-radius:3px;transition:width .5s ease}
+
+.question-card{background:var(--gradient-card);border:1px solid rgba(183,110,121,.15);border-radius:24px;padding:32px 24px;max-width:460px;width:100%;text-align:center;box-shadow:var(--shadow-glow);position:relative;overflow:hidden}
+.question-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient-main)}
+.q-number{font-size:13px;color:var(--rose-light);font-weight:500;margin-bottom:16px;letter-spacing:1px}
+.q-emoji{font-size:40px;margin-bottom:12px;display:block}
+.q-text{font-size:20px;font-weight:800;line-height:1.7;color:var(--text-primary);margin-bottom:8px}
+
+.vote-btns{display:flex;gap:14px;margin-top:24px;width:100%}
+.vote-btn{flex:1;padding:18px 10px;border:2px solid;border-radius:16px;background:transparent;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .3s;overflow:hidden}
+.vote-btn.p1{border-color:var(--rose);color:var(--rose-light)}
+.vote-btn.p1:hover,.vote-btn.p1.selected{background:rgba(183,110,121,.2);border-color:var(--rose-light);color:var(--rose-light);transform:translateY(-2px);box-shadow:0 6px 25px rgba(183,110,121,.3)}
+.vote-btn.p2{border-color:var(--purple-light);color:#a78bfa}
+.vote-btn.p2:hover,.vote-btn.p2.selected{background:rgba(107,63,160,.2);border-color:#a78bfa;color:#a78bfa;transform:translateY(-2px);box-shadow:0 6px 25px rgba(107,63,160,.3)}
+.vote-btn:active{transform:translateY(0) scale(.97)}
+.vote-btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.vote-btn .btn-emoji{display:block;font-size:28px;margin-bottom:4px}
+
+.vote-status{margin-top:16px;font-size:14px;color:var(--accent-gold);font-weight:500;min-height:24px;transition:all .3s}
+.vote-status.show{animation:bounceIn .5s ease}
+
+.skip-btn{background:none;border:1px solid rgba(184,165,200,.3);color:var(--text-secondary);padding:10px 24px;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:14px;cursor:pointer;transition:all .3s;margin-top:12px}
+.skip-btn:hover{border-color:var(--text-secondary);color:var(--text-primary)}
+
+.next-btn-wrap{text-align:center;margin-top:16px;opacity:0;transform:translateY(10px);pointer-events:none;transition:all .4s}
+.next-btn-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto}
+
+.votes-reveal{margin-top:16px;padding:14px;border-radius:14px;animation:slideUp .4s ease}
+.votes-reveal.agree{background:rgba(72,187,120,.1);border:1px solid rgba(72,187,120,.3)}
+.votes-reveal.disagree{background:rgba(237,137,54,.1);border:1px solid rgba(237,137,54,.3)}
+.votes-reveal p{font-size:14px;font-weight:600;line-height:1.6}
+
+.results-card{max-width:460px;width:100%}
+.score-row{display:flex;gap:16px;margin-bottom:24px}
+.score-box{flex:1;padding:20px 12px;border-radius:16px;text-align:center}
+.score-box.host{background:rgba(183,110,121,.15);border:1px solid rgba(183,110,121,.3)}
+.score-box.joiner{background:rgba(107,63,160,.15);border:1px solid rgba(107,63,160,.3)}
+.score-box .s-name{font-size:14px;color:var(--text-secondary);margin-bottom:8px;font-weight:500}
+.score-box .s-num{font-size:40px;font-weight:900}
+.score-box.host .s-num{color:var(--rose-light)}
+.score-box.joiner .s-num{color:#a78bfa}
+.score-box .s-label{font-size:12px;color:var(--text-secondary);margin-top:4px}
+
+.result-msg{font-size:15px;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:rgba(240,194,127,.08);border-radius:14px;border:1px solid rgba(240,194,127,.15)}
+.result-msg .hl{color:var(--accent-gold);font-weight:700}
+
+.titles-sec{margin-bottom:24px;width:100%}
+.titles-sec h3{font-size:16px;color:var(--rose-light);margin-bottom:12px;font-weight:700}
+.title-badge{display:inline-block;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:600;margin:4px}
+.title-badge.hb{background:rgba(183,110,121,.2);color:var(--rose-light);border:1px solid rgba(183,110,121,.3)}
+.title-badge.jb{background:rgba(107,63,160,.2);color:#a78bfa;border:1px solid rgba(107,63,160,.3)}
+
+.detailed-results{width:100%;max-width:460px}
+.detailed-results h3{font-size:16px;color:var(--rose-light);margin-bottom:12px;font-weight:700;text-align:center}
+.res-item{background:rgba(36,22,53,.6);border:1px solid rgba(183,110,121,.1);border-radius:12px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.res-item .r-q{color:var(--text-secondary);flex:1;margin-left:10px;text-align:right}
+.res-item .r-badge{padding:4px 10px;border-radius:8px;font-weight:600;font-size:12px;white-space:nowrap}
+.res-item .r-badge.hb{background:rgba(183,110,121,.2);color:var(--rose-light)}
+.res-item .r-badge.jb{background:rgba(107,63,160,.2);color:#a78bfa}
+.res-item .r-badge.both{background:rgba(240,194,127,.15);color:var(--accent-gold)}
+.res-item .r-badge.skip{background:rgba(184,165,200,.1);color:var(--text-secondary)}
+
+.sparkle-box{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100}
+.sparkle{position:absolute;font-size:20px;animation:sparkle .8s ease-out forwards}
+.confetti-box{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100}
+.confetti{position:absolute;width:10px;height:10px;border-radius:2px;animation:confetti-fall linear forwards}
+
+.spinner{display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.error-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:#c53030;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:9999;transition:transform .4s ease;max-width:90%;text-align:center}
+.error-toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:500px){
+.card,.question-card{padding:28px 18px;border-radius:20px}
+.title{font-size:24px}
+.q-text{font-size:18px}
+.vote-btn{padding:14px 8px;font-size:14px}
+.vote-btn .btn-emoji{font-size:24px}
+.score-box .s-num{font-size:32px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-deco"><div class="c"></div><div class="c"></div><div class="c"></div></div>
+<div class="sparkle-box" id="sparkleBox"></div>
+<div class="confetti-box" id="confettiBox"></div>
+<div class="connection-bar" id="connBar"></div>
+<div class="error-toast" id="errorToast"></div>
+
+<!-- LOBBY SCREEN -->
+<div class="screen active" id="lobbyScreen">
+  <div class="card">
+    <span class="emoji-big">💕</span>
+    <h1 class="title">مين أكتر واحد فينا؟</h1>
+    <p class="subtitle">العب أونلاين مع شريحتك!<br>اتصلوا ببعض واعرفوا مين الأكتر</p>
+
+    <div class="input-group">
+      <label>اسمك أنت 💫</label>
+      <input type="text" id="myName" placeholder="مثلاً: سارة" maxlength="20">
+    </div>
+
+    <button class="btn" id="createBtn" onclick="createRoom()">أنشئ غرفة جديدة 🎮</button>
+
+    <div class="divider">أو</div>
+
+    <div class="input-group">
+      <label>كود الغرفة 🔢</label>
+      <input type="text" id="roomCodeInput" placeholder="أدخل الكود هنا" maxlength="6" style="text-align:center;font-size:20px;letter-spacing:4px;font-weight:700">
+    </div>
+
+    <button class="btn btn-secondary" id="joinBtn" onclick="joinRoom()">ادخل الغرفة 🚀</button>
+  </div>
+</div>
+
+<!-- WAITING SCREEN -->
+<div class="screen" id="waitingScreen">
+  <div class="card">
+    <span class="emoji-big">⏳</span>
+    <h1 class="title" id="waitingTitle">في انتظار شريحتك...</h1>
+
+    <div class="room-code-display" id="roomCodeDisplay">
+      <div class="code-label">كود الغرفة</div>
+      <div class="code" id="roomCodeText">------</div>
+      <button class="copy-btn" onclick="copyCode()">📋 انسخ الكود</button>
+    </div>
+
+    <div class="waiting-status">
+      <p style="color:var(--text-secondary);font-size:14px">شارك الكود مع شريحتك عشان يدخل</p>
+      <div class="waiting-dots">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <p style="font-size:13px;color:var(--text-secondary);margin-top:16px" id="waitingPartnerInfo"></p>
+
+    <div id="startGameWrap" style="display:none;margin-top:20px">
+      <p style="color:var(--accent-gold);font-weight:700;margin-bottom:12px;font-size:16px" id="bothReadyText"></p>
+      <button class="btn" onclick="startGame()">ابدأ اللعبة! 🎉</button>
+    </div>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="game-header">
+    <span class="progress-info" id="progressText">1 / 30</span>
+    <span class="progress-info" id="scoreLive"></span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="question-card" id="questionCard">
+    <span class="q-emoji" id="qEmoji">🤔</span>
+    <div class="q-number" id="qNumber">السؤال 1 من 30</div>
+    <div class="q-text" id="qText"></div>
+
+    <div class="vote-btns">
+      <button class="vote-btn p1" id="voteBtnP1" onclick="castVote(1)">
+        <span class="btn-emoji">🙋</span>
+        <span id="p1Label">...</span>
+      </button>
+      <button class="vote-btn p2" id="voteBtnP2" onclick="castVote(2)">
+        <span class="btn-emoji">🙋</span>
+        <span id="p2Label">...</span>
+      </button>
+    </div>
+
+    <div class="vote-status" id="voteStatus"></div>
+    <div id="votesReveal"></div>
+
+    <button class="skip-btn" id="skipBtn" onclick="skipQ()">تخطي ⏭️</button>
+
+    <div class="next-btn-wrap" id="nextWrap">
+      <button class="btn" onclick="nextQ()" id="nextBtnText">السؤال التالي ←</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="card results-card">
+    <span class="emoji-big">🏆</span>
+    <h1 class="title">النتيجة النهائية!</h1>
+
+    <div class="score-row">
+      <div class="score-box host">
+        <div class="s-name" id="rHostName">...</div>
+        <div class="s-num" id="rHostScore">0</div>
+        <div class="s-label">تصويت</div>
+      </div>
+      <div class="score-box joiner">
+        <div class="s-name" id="rJoinerName">...</div>
+        <div class="s-num" id="rJoinerScore">0</div>
+        <div class="s-label">تصويت</div>
+      </div>
+    </div>
+
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="titles-sec" id="titlesSec"></div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="playAgain()">العب مرة ثانية 🔄</button>
+      <button class="btn btn-outline" onclick="shareResult()">شارك النتيجة 📸</button>
+    </div>
+  </div>
+  <div class="detailed-results" id="detailedResults"></div>
+</div>
+
+<script>
+const socket = io();
+
+let myName = '';
+let myRoom = '';
+let myPlayerNum = 0;
+let isHost = false;
+let totalQ = 30;
+let currentQuestion = 0;
+let hasVoted = false;
+let allQuestions = [];
+let myScores = { host: 0, joiner: 0 };
+
+const el = id => document.getElementById(id);
+
+function showError(msg) {
+  const t = el('errorToast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function switchScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  el(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function createRoom() {
+  myName = el('myName').value.trim();
+  if (!myName) { el('myName').style.borderColor='#ff6b9d'; return; }
+  el('myName').style.borderColor='';
+
+  el('createBtn').disabled = true;
+  el('createBtn').innerHTML = '<span class="spinner"></span>';
+
+  socket.emit('create-room', { playerName: myName }, (res) => {
+    el('createBtn').disabled = false;
+    el('createBtn').innerHTML = 'أنشئ غرفة جديدة 🎮';
+
+    if (!res.success) { showError(res.error); return; }
+
+    myRoom = res.code;
+    myPlayerNum = res.playerNum;
+    isHost = true;
+
+    el('roomCodeText').textContent = res.code;
+    el('waitingTitle').textContent = 'في انتظار شريحتك...';
+    el('waitingPartnerInfo').textContent = 'شارك الكود اللي فوق مع شريحتك عشان يدخل الغرفة';
+    switchScreen('waitingScreen');
+  });
+}
+
+function joinRoom() {
+  myName = el('myName').value.trim();
+  const code = el('roomCodeInput').value.trim();
+  if (!myName) { el('myName').style.borderColor='#ff6b9d'; return; }
+  if (!code || code.length !== 6) { el('roomCodeInput').style.borderColor='#ff6b9d'; return; }
+  el('myName').style.borderColor='';
+  el('roomCodeInput').style.borderColor='';
+
+  el('joinBtn').disabled = true;
+  el('joinBtn').innerHTML = '<span class="spinner"></span>';
+
+  socket.emit('join-room', { roomCode: code, playerName: myName }, (res) => {
+    el('joinBtn').disabled = false;
+    el('joinBtn').innerHTML = 'ادخل الغرفة 🚀';
+
+    if (!res.success) { showError(res.error); return; }
+
+    myRoom = res.code;
+    myPlayerNum = res.playerNum;
+    isHost = false;
+
+    el('roomCodeText').textContent = res.code;
+    el('waitingTitle').textContent = 'ادخلت الغرفة!';
+    el('waitingPartnerInfo').textContent = 'مستنيين صاحب الغرفة يبدأ اللعبة...';
+    switchScreen('waitingScreen');
+  });
+}
+
+el('roomCodeInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') joinRoom();
+});
+
+el('myName').addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (el('roomCodeInput').value.trim()) joinRoom();
+    else createRoom();
+  }
+});
+
+function copyCode() {
+  navigator.clipboard.writeText(myRoom).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✅ تم النسخ!';
+    setTimeout(() => btn.textContent = '📋 انسخ الكود', 2000);
+  }).catch(() => {});
+}
+
+function startGame() {
+  if (!isHost) return;
+  socket.emit('start-game');
+}
+
+socket.on('player-joined', ({ hostName, joinerName }) => {
+  el('startGameWrap').style.display = 'block';
+  el('bothReadyText').textContent = `${joinerName} دخل(ت) الغرفة! 🎉`;
+  el('waitingPartnerInfo').textContent = `${joinerName} جاهز(ة) اللعب!`;
+
+  const btn = el('startGameWrap').querySelector('.btn');
+  btn.textContent = `ابدأ اللعب مع ${joinerName}! 🎉`;
+});
+
+socket.on('game-started', ({ questions, totalQuestions, hostName, joinerName }) => {
+  totalQ = totalQuestions;
+  allQuestions = questions;
+  el('p1Label').textContent = hostName;
+  el('p2Label').textContent = joinerName;
+  switchScreen('gameScreen');
+});
+
+socket.on('new-question', ({ question, emoji, questionNum, totalQuestions }) => {
+  currentQuestion = questionNum - 1;
+  hasVoted = false;
+
+  el('qEmoji').textContent = emoji;
+  el('qNumber').textContent = `السؤال ${questionNum} من ${totalQuestions}`;
+  el('qText').textContent = question;
+  el('progressText').textContent = `${questionNum} / ${totalQuestions}`;
+  el('progressFill').style.width = `${((questionNum - 1) / totalQuestions) * 100}%`;
+  el('voteStatus').textContent = '';
+  el('voteStatus').className = 'vote-status';
+  el('votesReveal').innerHTML = '';
+  el('skipBtn').style.display = 'block';
+  el('nextWrap').className = 'next-btn-wrap';
+
+  el('voteBtnP1').className = 'vote-btn p1';
+  el('voteBtnP2').className = 'vote-btn p2';
+  el('voteBtnP1').disabled = false;
+  el('voteBtnP2').disabled = false;
+
+  if (!isHost) {
+    el('nextWrap').style.display = 'none';
+  }
+
+  const card = el('questionCard');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'scaleIn .4s ease-out';
+
+  updateScoreLive();
+});
+
+function updateScoreLive() {
+  el('scoreLive').textContent = `💛 ${myScores.host} - ${myScores.joiner}`;
+}
+
+function castVote(votedFor) {
+  if (hasVoted) return;
+  hasVoted = true;
+
+  socket.emit('vote', { questionIndex: currentQuestion, votedFor });
+
+  const btn = votedFor === 1 ? el('voteBtnP1') : el('voteBtnP2');
+  btn.classList.add('selected');
+  el('voteBtnP1').disabled = true;
+  el('voteBtnP2').disabled = true;
+  el('skipBtn').style.display = 'none';
+
+  el('voteStatus').textContent = '敝ت التصويت! مستنيين الشريك... ⏳';
+  el('voteStatus').className = 'vote-status show';
+}
+
+function skipQ() {
+  if (hasVoted) return;
+  hasVoted = true;
+
+  socket.emit('skip-question', { questionIndex: currentQuestion });
+
+  el('voteBtnP1').disabled = true;
+  el('voteBtnP2').disabled = true;
+  el('skipBtn').style.display = 'none';
+
+  el('voteStatus').textContent = 'تخطيت السؤال! ⏭️';
+  el('voteStatus').className = 'vote-status show';
+}
+
+socket.on('vote-update', ({ questionIndex, votes, hostName, joinerName }) => {
+  if (questionIndex !== currentQuestion) return;
+
+  let statusText = '';
+  if (votes.p1 !== undefined && votes.p2 === undefined) {
+    const otherName = isHost ? joinerName : hostName;
+    statusText = `${otherName}敝(ت) التصويت! ✅`;
+  } else if (votes.p1 === undefined && votes.p2 !== undefined) {
+    const otherName = isHost ? joinerName : hostName;
+    statusText = `${otherName}敝(ت) التصويت! ✅`;
+  }
+
+  if (statusText && !hasVoted) {
+    el('voteStatus').textContent = statusText;
+    el('voteStatus').className = 'vote-status show';
+  }
+});
+
+socket.on('both-voted', ({ votes, scores, hostName, joinerName }) => {
+  myScores = { host: scores.p1, joiner: scores.p2 };
+  updateScoreLive();
+
+  el('voteBtnP1').disabled = true;
+  el('voteBtnP2').disabled = true;
+  el('skipBtn').style.display = 'none';
+
+  const reveal = el('votesReveal');
+  const p1Vote = votes.p1;
+  const p2Vote = votes.p2;
+
+  if (p1Vote === p2Vote) {
+    const agreedOn = p1Vote === 1 ? hostName : joinerName;
+    reveal.innerHTML = `<div class="votes-reveal agree"><p>أنتما اتفقتوا! 💕<br><strong>${agreedOn}</strong> هو(ي) الأكتر واحد</p></div>`;
+  } else {
+    reveal.innerHTML = `<div class="votes-reveal disagree"><p>مختلفين! 🤔<br>${hostName} اختار(ت) نفسه/ها... ${joinerName} اختار(ت) نفسه/ها!</p></div>`;
+  }
+
+  el('voteStatus').textContent = 'الاتنين بصّتوا! 🎉';
+  el('voteStatus').className = 'vote-status show';
+  createSparkles();
+
+  if (isHost) {
+    el('nextWrap').className = 'next-btn-wrap show';
+    el('nextWrap').style.display = '';
+    if (currentQuestion + 1 >= totalQ) {
+      el('nextBtnText').textContent = 'عرض النتيجة 🏆';
+    }
+  }
+});
+
+function nextQ() {
+  socket.emit('next-question');
+}
+
+socket.on('game-over', ({ scores, hostName, joinerName, questionResults }) => {
+  el('rHostName').textContent = hostName;
+  el('rJoinerName').textContent = joinerName;
+  el('rHostScore').textContent = scores.p1;
+  el('rJoinerScore').textContent = scores.p2;
+
+  const diff = Math.abs(scores.p1 - scores.p2);
+  let msg = '';
+  if (scores.p1 === scores.p2) {
+    msg = `<span class="hl">${hostName}</span> و<span class="hl">${joinerName}</span> متساويين تماماً! 💕 تعكسوا بعض!`;
+  } else if (diff <= 3) {
+    msg = `<span class="hl">${hostName}</span> و<span class="hl">${joinerName}</span> قريبين من بعض! شبه بعض في كل حاجة 💞`;
+  } else {
+    const topName = scores.p1 > scores.p2 ? hostName : joinerName;
+    msg = `<span class="hl">${topName}</span> عنده(ا) ${Math.max(scores.p1, scores.p2)} تصويت! أكتر واحد فينا بجد! 🏆`;
+  }
+  el('resultMsg').innerHTML = msg;
+
+  const titlesEl = el('titlesSec');
+  titlesEl.innerHTML = '<h3>ملخص الألقاب 🏅</h3>';
+  let badgeCount = 0;
+  questionResults.forEach(r => {
+    const v = r.votes;
+    if (v.p1 !== undefined && v.p1 !== 'skip') {
+      const name = v.p1 === 1 ? hostName : joinerName;
+      const cls = v.p1 === 1 ? 'hb' : 'jb';
+      titlesEl.innerHTML += `<span class="title-badge ${cls}">${name}: ${r.question.replace('مين أكتر واحد فينا', '')}</span>`;
+      badgeCount++;
+    }
+    if (v.p2 !== undefined && v.p2 !== 'skip' && v.p1 !== v.p2) {
+      const name = v.p2 === 1 ? hostName : joinerName;
+      const cls = v.p2 === 1 ? 'hb' : 'jb';
+      titlesEl.innerHTML += `<span class="title-badge ${cls}">${name}: ${r.question.replace('مين أكتر واحد فينا', '')}</span>`;
+      badgeCount++;
+    }
+  });
+  if (badgeCount === 0) titlesEl.innerHTML = '';
+
+  const det = el('detailedResults');
+  det.innerHTML = '<h3>تفاصيل كل سؤال 📋</h3>';
+  questionResults.forEach(r => {
+    const v = r.votes;
+    let badge = '';
+    if (v.p1 !== undefined && v.p1 !== 'skip' && v.p2 !== undefined && v.p2 !== 'skip') {
+      if (v.p1 === v.p2) {
+        const name = v.p1 === 1 ? hostName : joinerName;
+        badge = `<span class="r-badge both">🤝 ${name}</span>`;
+      } else {
+        badge = `<span class="r-badge hb">${hostName}</span> <span class="r-badge jb">${joinerName}</span>`;
+      }
+    } else if (v.p1 === 'skip' || v.p2 === 'skip') {
+      badge = '<span class="r-badge skip">⏭️ تم التخطي</span>';
+    } else {
+      badge = '<span class="r-badge skip">⏭️ لم يُصوّت</span>';
+    }
+    det.innerHTML += `<div class="res-item"><span class="r-q">${r.emoji} ${r.question}</span>${badge}</div>`;
+  });
+
+  switchScreen('resultsScreen');
+  createConfetti();
+});
+
+socket.on('partner-disconnected', ({ name }) => {
+  showError(`${name} قطع(ت) الاتصال!`);
+});
+
+socket.on('back-to-waiting', ({ hostName, joinerName }) => {
+  myScores = { host: 0, joiner: 0 };
+  el('roomCodeText').textContent = myRoom;
+  el('waitingTitle').textContent = 'جاهزين لجولة جديدة!';
+  el('waitingPartnerInfo').textContent = `${joinerName} و${hostName} جاهزين 🎉`;
+  el('startGameWrap').style.display = isHost ? 'block' : 'none';
+  el('bothReadyText').textContent = 'جاهزين لجولة جديدة! 🔄';
+  switchScreen('waitingScreen');
+});
+
+function playAgain() {
+  socket.emit('play-again');
+}
+
+function shareResult() {
+  const txt = `💕 مين أكتر واحد فينا؟ 💕\n📊 ${el('rHostName').textContent}: ${el('rHostScore').textContent} | ${el('rJoinerName').textContent}: ${el('rJoinerScore').textContent}\n💎 لعبنا ${totalQ} سؤال\nجربوا اللعبة! 🎮`;
+  if (navigator.share) navigator.share({ text: txt }).catch(() => {});
+  else if (navigator.clipboard) {
+    navigator.clipboard.writeText(txt).then(() => {
+      showError('تم النسخ! ✅');
+    }).catch(() => prompt('انسخ:', txt));
+  } else prompt('انسخ:', txt);
+}
+
+socket.on('connect', () => {
+  const bar = el('connBar');
+  bar.textContent = '🟢 متصل بالسيرفر';
+  bar.className = 'connection-bar connected show';
+  setTimeout(() => bar.classList.remove('show'), 2000);
+});
+
+socket.on('disconnect', () => {
+  const bar = el('connBar');
+  bar.textContent = '🔴 انقطع الاتصال! بيحصل إعادة الاتصال...';
+  bar.className = 'connection-bar disconnected show';
+});
+
+socket.on('reconnect', () => {
+  const bar = el('connBar');
+  bar.textContent = '🟢 تم إعادة الاتصال!';
+  bar.className = 'connection-bar connected show';
+  setTimeout(() => bar.classList.remove('show'), 2000);
+});
+
+function createSparkles() {
+  const box = el('sparkleBox');
+  const emojis = ['✨','💫','⭐','💕','💖','🌟'];
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      s.style.left = Math.random() * 80 + 10 + '%';
+      s.style.top = Math.random() * 60 + 20 + '%';
+      box.appendChild(s);
+      setTimeout(() => s.remove(), 1000);
+    }, i * 80);
+  }
+}
+
+function createConfetti() {
+  const box = el('confettiBox');
+  const colors = ['#b76e79','#6b3fa0','#e8c4c8','#f0c27f','#ff6b9d','#a78bfa'];
+  for (let i = 0; i < 50; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + '%';
+      c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      c.style.width = Math.random() * 8 + 5 + 'px';
+      c.style.height = Math.random() * 8 + 5 + 'px';
+      c.style.animationDuration = Math.random() * 2 + 2 + 's';
+      box.appendChild(c);
+      setTimeout(() => c.remove(), 4500);
+    }, i * 50);
+  }
+}
+</script>
+</body>
+</html>

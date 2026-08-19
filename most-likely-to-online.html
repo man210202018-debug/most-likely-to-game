@@ -4,193 +4,264 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>مين أكتر واحد فينا؟ 💕</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--rose:#b76e79;--rose-light:#d4a0a7;--rose-gold:#e8c4c8;--purple-deep:#2d1b4e;--purple-mid:#4a2c6e;--purple-light:#6b3fa0;--dark-bg:#1a1025;--dark-card:#241635;--text-primary:#f0e6f6;--text-secondary:#b8a5c8;--accent-pink:#ff6b9d;--accent-gold:#f0c27f;--gradient-main:linear-gradient(135deg,#b76e79,#6b3fa0);--gradient-card:linear-gradient(145deg,#2d1b4e,#1a1025);--shadow-glow:0 0 40px rgba(183,110,121,0.15)}
+:root{--rose:#b76e79;--rose-light:#d4a0a7;--rose-gold:#e8c4c8;--purple-deep:#2d1b4e;--purple-mid:#4a2c6e;--purple-light:#6b3fa0;--dark-bg:#0f0a18;--dark-card:rgba(30,18,50,.85);--text-primary:#f0e6f6;--text-secondary:#b8a5c8;--accent-pink:#ff6b9d;--accent-gold:#f0c27f;--glass-bg:rgba(255,255,255,.04);--glass-border:rgba(255,255,255,.08);--glass-shine:rgba(255,255,255,.12)}
 body{font-family:'Tajawal',sans-serif;background:var(--dark-bg);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
-.bg-d{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
-.bg-d .c{position:absolute;border-radius:50%;filter:blur(80px);opacity:.12;animation:fb 20s ease-in-out infinite}
-.bg-d .c:nth-child(1){width:400px;height:400px;background:var(--rose);top:-100px;right:-100px}
-.bg-d .c:nth-child(2){width:350px;height:350px;background:var(--purple-light);bottom:-80px;left:-80px;animation-delay:-7s}
-.bg-d .c:nth-child(3){width:250px;height:250px;background:var(--accent-pink);top:50%;left:50%;animation-delay:-14s}
-@keyframes fb{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(30px,-40px) scale(1.05)}50%{transform:translate(-20px,20px) scale(.95)}75%{transform:translate(40px,30px) scale(1.02)}}
-.screen{display:none;position:relative;z-index:1;min-height:100vh;padding:20px;animation:fiu .6s ease-out}
-.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
-@keyframes fiu{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-@keyframes scaleIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 20%,rgba(183,110,121,.08) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(107,63,160,.08) 0%,transparent 50%),radial-gradient(ellipse at 50% 50%,rgba(255,107,157,.04) 0%,transparent 60%);animation:bgShift 30s ease-in-out infinite;z-index:0;pointer-events:none}
+@keyframes bgShift{0%,100%{transform:translate(0,0) rotate(0deg)}33%{transform:translate(-2%,1%) rotate(1deg)}66%{transform:translate(1%,-1%) rotate(-1deg)}}
+
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(60px);opacity:.15}
+.orb-1{width:300px;height:300px;background:var(--rose);top:-80px;right:-60px;animation:orbFloat 25s ease-in-out infinite}
+.orb-2{width:250px;height:250px;background:var(--purple-light);bottom:-60px;left:-40px;animation:orbFloat 20s ease-in-out infinite reverse}
+.orb-3{width:180px;height:180px;background:var(--accent-pink);top:40%;left:60%;animation:orbFloat 22s ease-in-out infinite 5s}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(20px,-30px) scale(1.05)}50%{transform:translate(-15px,20px) scale(.95)}75%{transform:translate(25px,15px) scale(1.02)}}
+
+.screen{display:none;position:relative;z-index:1;min-height:100vh;padding:20px}
+.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center;animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-@keyframes hb{0%,100%{transform:scale(1)}15%{transform:scale(1.15)}30%{transform:scale(1)}45%{transform:scale(1.1)}60%{transform:scale(1)}}
-@keyframes bounceIn{0%{transform:scale(.3);opacity:0}50%{transform:scale(1.05)}70%{transform:scale(.95)}100%{transform:scale(1);opacity:1}}
-@keyframes confetti-fall{0%{transform:translateY(-100vh) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes hb{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}45%{transform:scale(1.08)}60%{transform:scale(1)}}
+@keyframes bounceIn{0%{transform:scale(.3);opacity:0}50%{transform:scale(1.05)}70%{transform:scale(.97)}100%{transform:scale(1);opacity:1}}
+@keyframes confettiFall{0%{transform:translateY(-100vh) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 @keyframes sparkle{0%,100%{opacity:0;transform:scale(0) rotate(0deg)}50%{opacity:1;transform:scale(1) rotate(180deg)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-.card{background:var(--gradient-card);border:1px solid rgba(183,110,121,.2);border-radius:24px;padding:36px 28px;max-width:460px;width:100%;text-align:center;box-shadow:var(--shadow-glow);animation:scaleIn .6s ease-out}
-.emoji-big{font-size:60px;display:block;margin-bottom:16px;animation:hb 2s ease-in-out infinite}
-.title{font-size:28px;font-weight:900;background:var(--gradient-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;line-height:1.4}
-.subtitle{color:var(--text-secondary);font-size:15px;margin-bottom:28px;line-height:1.8}
-.input-g{margin-bottom:16px;text-align:right}
-.input-g label{display:block;font-size:14px;color:var(--text-secondary);margin-bottom:8px;font-weight:500}
-.input-g input{width:100%;padding:14px 18px;border:2px solid rgba(183,110,121,.3);border-radius:14px;background:rgba(26,16,37,.8);color:var(--text-primary);font-family:'Tajawal',sans-serif;font-size:16px;outline:none;transition:all .3s}
-.input-g input::placeholder{color:rgba(184,165,200,.4)}
-.input-g input:focus{border-color:var(--rose);box-shadow:0 0 20px rgba(183,110,121,.2)}
-.btn{width:100%;padding:16px;border:none;border-radius:14px;background:var(--gradient-main);color:#fff;font-family:'Tajawal',sans-serif;font-size:18px;font-weight:700;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
-.btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(183,110,121,.4)}
-.btn:active{transform:translateY(0)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
-.btn-o{background:transparent;border:2px solid rgba(183,110,121,.4);color:var(--rose-light)}
-.btn-o:hover{border-color:var(--rose);background:rgba(183,110,121,.1)}
-.btn-s{background:rgba(107,63,160,.3);border:2px solid rgba(107,63,160,.5);color:#a78bfa}
-.btn-s:hover{background:rgba(107,63,160,.5);border-color:#a78bfa}
-.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--rose);font-size:12px}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes glowPulse{0%,100%{filter:drop-shadow(0 0 8px rgba(183,110,121,.4)) drop-shadow(0 0 20px rgba(107,63,160,.2))}50%{filter:drop-shadow(0 0 16px rgba(183,110,121,.6)) drop-shadow(0 0 40px rgba(107,63,160,.3))}}
+@keyframes borderGlow{0%,100%{border-color:rgba(183,110,121,.3)}50%{border-color:rgba(183,110,121,.6)}}
+@keyframes floatName{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+.glass{background:var(--glass-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:28px;box-shadow:0 8px 32px rgba(0,0,0,.3),inset 0 1px 0 var(--glass-shine);animation:scaleIn .5s ease}
+
+/* ===== GLASS NAME DECORATION ===== */
+.name-decoration{position:relative;padding:30px 40px;margin:8px 0 20px;text-align:center}
+.name-decoration::before,.name-decoration::after{content:'';position:absolute;width:60px;height:60px;border:2px solid var(--rose);opacity:.3}
+.name-decoration::before{top:0;left:0;border-right:none;border-bottom:none;border-radius:20px 0 0 0}
+.name-decoration::after{bottom:0;right:0;border-left:none;border-top:none;border-radius:0 0 20px 0}
+.name-ornament-top,.name-ornament-bottom{position:absolute;left:50%;transform:translateX(-50%);font-size:14px;color:var(--rose);letter-spacing:4px;opacity:.5}
+.name-ornament-top{top:-8px}
+.name-ornament-bottom{bottom:-8px}
+.shuruq-name{font-family:'Aref Ruqaa','Amiri',serif;font-size:52px;font-weight:700;background:linear-gradient(135deg,#e8c4c8 0%,#fff 25%,#d4a0a7 50%,#fff 75%,#b76e79 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite,glowPulse 3s ease-in-out infinite,floatName 4s ease-in-out infinite;filter:drop-shadow(0 0 8px rgba(183,110,121,.4)) drop-shadow(0 0 20px rgba(107,63,160,.2));line-height:1.3;position:relative}
+.shuruq-name::after{content:'شروقتي';position:absolute;top:0;left:0;right:0;font-family:'Aref Ruqaa','Amiri',serif;font-size:52px;font-weight:700;background:linear-gradient(180deg,rgba(255,255,255,.15) 0%,transparent 60%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;pointer-events:none}
+.name-sub{font-family:'Tajawal',sans-serif;font-size:12px;color:var(--rose-light);opacity:.6;margin-top:4px;letter-spacing:3px;font-weight:300}
+
+/* ===== CARDS ===== */
+.card-body{padding:36px 28px;text-align:center}
+.emoji-big{font-size:52px;display:block;margin-bottom:12px;animation:hb 2s ease-in-out infinite}
+.title{font-size:26px;font-weight:900;background:linear-gradient(135deg,var(--rose-light),var(--accent-pink),var(--purple-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;line-height:1.4}
+.subtitle{color:var(--text-secondary);font-size:14px;margin-bottom:24px;line-height:1.8}
+
+.input-g{margin-bottom:14px;text-align:right}
+.input-g label{display:block;font-size:13px;color:var(--text-secondary);margin-bottom:6px;font-weight:500}
+.input-g input{width:100%;padding:13px 16px;border:1px solid var(--glass-border);border-radius:12px;background:rgba(255,255,255,.03);color:var(--text-primary);font-family:'Tajawal',sans-serif;font-size:15px;outline:none;transition:all .3s}
+.input-g input::placeholder{color:rgba(184,165,200,.35)}
+.input-g input:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(183,110,121,.15)}
+
+.btn{width:100%;padding:15px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--rose),var(--purple-light));color:#fff;font-family:'Tajawal',sans-serif;font-size:17px;font-weight:700;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;letter-spacing:.5px}
+.btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transition:left .6s}
+.btn:hover::after{left:100%}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(183,110,121,.35)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+.btn-o{background:transparent;border:1.5px solid rgba(183,110,121,.35);color:var(--rose-light)}
+.btn-o:hover{border-color:var(--rose);background:rgba(183,110,121,.08)}
+.btn-s{background:linear-gradient(135deg,rgba(107,63,160,.4),rgba(107,63,160,.2));border:1.5px solid rgba(107,63,160,.4);color:#a78bfa}
+.btn-s:hover{background:linear-gradient(135deg,rgba(107,63,160,.6),rgba(107,63,160,.3));border-color:#a78bfa}
+
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--rose);font-size:11px;opacity:.6}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--rose),transparent)}
-.room-code{margin:20px 0;padding:20px;background:rgba(26,16,37,.6);border:2px dashed var(--rose);border-radius:16px;text-align:center}
-.room-code .code{font-size:42px;font-weight:900;letter-spacing:8px;background:var(--gradient-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:monospace}
-.room-code .code-l{font-size:13px;color:var(--text-secondary);margin-bottom:8px}
-.copy-btn{margin-top:12px;padding:8px 20px;border:1px solid rgba(183,110,121,.4);border-radius:10px;background:transparent;color:var(--rose-light);font-family:'Tajawal',sans-serif;font-size:13px;cursor:pointer;transition:all .3s}
-.copy-btn:hover{background:rgba(183,110,121,.15);border-color:var(--rose)}
-.wait-dots{display:inline-flex;gap:6px;margin-top:16px}
-.wait-dots span{width:10px;height:10px;border-radius:50%;background:var(--rose);animation:pulse 1.4s ease-in-out infinite}
+
+.room-code{margin:18px 0;padding:18px;background:rgba(255,255,255,.02);border:1.5px dashed var(--rose);border-radius:16px;text-align:center;position:relative;animation:borderGlow 3s ease-in-out infinite}
+.room-code .code{font-size:40px;font-weight:900;letter-spacing:8px;background:linear-gradient(135deg,var(--rose-light),var(--accent-gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:monospace}
+.room-code .code-l{font-size:12px;color:var(--text-secondary);margin-bottom:6px}
+.copy-btn{margin-top:10px;padding:7px 18px;border:1px solid rgba(183,110,121,.3);border-radius:8px;background:transparent;color:var(--rose-light);font-family:'Tajawal',sans-serif;font-size:12px;cursor:pointer;transition:all .3s}
+.copy-btn:hover{background:rgba(183,110,121,.1);border-color:var(--rose)}
+
+.wait-dots{display:inline-flex;gap:6px;margin-top:14px}
+.wait-dots span{width:8px;height:8px;border-radius:50%;background:var(--rose);animation:pulse 1.4s ease-in-out infinite}
 .wait-dots span:nth-child(2){animation-delay:.2s}
 .wait-dots span:nth-child(3){animation-delay:.4s}
+
 .game-hd{width:100%;max-width:460px;display:flex;justify-content:space-between;align-items:center}
-.prog-i{font-size:14px;color:var(--text-secondary);font-weight:500}
-.prog-bar{width:100%;max-width:460px;height:6px;background:rgba(107,63,160,.3);border-radius:3px;overflow:hidden;margin:8px 0}
-.prog-fill{height:100%;background:var(--gradient-main);border-radius:3px;transition:width .5s}
-.q-card{background:var(--gradient-card);border:1px solid rgba(183,110,121,.15);border-radius:24px;padding:32px 24px;max-width:460px;width:100%;text-align:center;box-shadow:var(--shadow-glow);position:relative;overflow:hidden}
-.q-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient-main)}
-.q-num{font-size:13px;color:var(--rose-light);font-weight:500;margin-bottom:16px;letter-spacing:1px}
-.q-em{font-size:40px;margin-bottom:12px;display:block}
-.q-tx{font-size:20px;font-weight:800;line-height:1.7;color:var(--text-primary)}
-.vote-btns{display:flex;gap:14px;margin-top:24px;width:100%}
-.v-btn{flex:1;padding:18px 10px;border:2px solid;border-radius:16px;background:transparent;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .3s;overflow:hidden}
-.v-btn.p1{border-color:var(--rose);color:var(--rose-light)}
-.v-btn.p1:hover,.v-btn.p1.sel{background:rgba(183,110,121,.2);border-color:var(--rose-light);transform:translateY(-2px);box-shadow:0 6px 25px rgba(183,110,121,.3)}
-.v-btn.p2{border-color:var(--purple-light);color:#a78bfa}
-.v-btn.p2:hover,.v-btn.p2.sel{background:rgba(107,63,160,.2);border-color:#a78bfa;transform:translateY(-2px);box-shadow:0 6px 25px rgba(107,63,160,.3)}
+.prog-i{font-size:13px;color:var(--text-secondary);font-weight:500}
+.prog-bar{width:100%;max-width:460px;height:5px;background:rgba(107,63,160,.2);border-radius:3px;overflow:hidden;margin:6px 0}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--rose),var(--purple-light));border-radius:3px;transition:width .5s}
+
+.q-card{padding:30px 22px;position:relative;overflow:hidden}
+.q-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--rose),var(--purple-light),transparent)}
+.q-num{font-size:12px;color:var(--rose-light);font-weight:500;margin-bottom:14px;letter-spacing:1px;opacity:.8}
+.q-em{font-size:36px;margin-bottom:10px;display:block}
+.q-tx{font-size:19px;font-weight:800;line-height:1.7;color:var(--text-primary)}
+
+.vote-btns{display:flex;gap:12px;margin-top:22px;width:100%}
+.v-btn{flex:1;padding:16px 8px;border:1.5px solid;border-radius:14px;background:transparent;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .3s;overflow:hidden}
+.v-btn.p1{border-color:rgba(183,110,121,.4);color:var(--rose-light)}
+.v-btn.p1:hover,.v-btn.p1.sel{background:rgba(183,110,121,.12);border-color:var(--rose-light);transform:translateY(-2px);box-shadow:0 4px 20px rgba(183,110,121,.25)}
+.v-btn.p2{border-color:rgba(107,63,160,.4);color:#a78bfa}
+.v-btn.p2:hover,.v-btn.p2.sel{background:rgba(107,63,160,.12);border-color:#a78bfa;transform:translateY(-2px);box-shadow:0 4px 20px rgba(107,63,160,.25)}
 .v-btn:active{transform:translateY(0) scale(.97)}
-.v-btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important}
-.v-btn .b-em{display:block;font-size:28px;margin-bottom:4px}
-.v-stat{margin-top:16px;font-size:14px;color:var(--accent-gold);font-weight:500;min-height:24px;transition:all .3s}
+.v-btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.v-btn .b-em{display:block;font-size:24px;margin-bottom:3px}
+
+.v-stat{margin-top:14px;font-size:13px;color:var(--accent-gold);font-weight:500;min-height:22px;transition:all .3s}
 .v-stat.show{animation:bounceIn .5s ease}
-.skip-btn{background:none;border:1px solid rgba(184,165,200,.3);color:var(--text-secondary);padding:10px 24px;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:14px;cursor:pointer;transition:all .3s;margin-top:12px}
+.skip-btn{background:none;border:1px solid rgba(184,165,200,.2);color:var(--text-secondary);padding:8px 20px;border-radius:10px;font-family:'Tajawal',sans-serif;font-size:13px;cursor:pointer;transition:all .3s;margin-top:10px}
 .skip-btn:hover{border-color:var(--text-secondary);color:var(--text-primary)}
-.next-wrap{text-align:center;margin-top:16px;opacity:0;transform:translateY(10px);pointer-events:none;transition:all .4s}
+.next-wrap{text-align:center;margin-top:14px;opacity:0;transform:translateY(10px);pointer-events:none;transition:all .4s}
 .next-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto}
-.v-reveal{margin-top:16px;padding:14px;border-radius:14px;animation:slideUp .4s ease}
-.v-reveal.agree{background:rgba(72,187,120,.1);border:1px solid rgba(72,187,120,.3)}
-.v-reveal.disagree{background:rgba(237,137,54,.1);border:1px solid rgba(237,137,54,.3)}
-.v-reveal p{font-size:14px;font-weight:600;line-height:1.6}
-.score-row{display:flex;gap:16px;margin-bottom:24px}
-.s-box{flex:1;padding:20px 12px;border-radius:16px;text-align:center}
-.s-box.h{background:rgba(183,110,121,.15);border:1px solid rgba(183,110,121,.3)}
-.s-box.j{background:rgba(107,63,160,.15);border:1px solid rgba(107,63,160,.3)}
-.s-box .sn{font-size:14px;color:var(--text-secondary);margin-bottom:8px;font-weight:500}
-.s-box .sv{font-size:40px;font-weight:900}
+
+.v-reveal{margin-top:14px;padding:12px;border-radius:12px;animation:slideUp .4s ease}
+.v-reveal.agree{background:rgba(72,187,120,.08);border:1px solid rgba(72,187,120,.25)}
+.v-reveal.disagree{background:rgba(237,137,54,.08);border:1px solid rgba(237,137,54,.25)}
+.v-reveal p{font-size:13px;font-weight:600;line-height:1.6}
+
+.score-row{display:flex;gap:14px;margin-bottom:22px}
+.s-box{flex:1;padding:18px 10px;border-radius:14px;text-align:center}
+.s-box.h{background:rgba(183,110,121,.08);border:1px solid rgba(183,110,121,.2)}
+.s-box.j{background:rgba(107,63,160,.08);border:1px solid rgba(107,63,160,.2)}
+.s-box .sn{font-size:13px;color:var(--text-secondary);margin-bottom:6px;font-weight:500}
+.s-box .sv{font-size:36px;font-weight:900}
 .s-box.h .sv{color:var(--rose-light)}
 .s-box.j .sv{color:#a78bfa}
-.s-box .sl{font-size:12px;color:var(--text-secondary);margin-top:4px}
-.res-msg{font-size:15px;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:rgba(240,194,127,.08);border-radius:14px;border:1px solid rgba(240,194,127,.15)}
+.s-box .sl{font-size:11px;color:var(--text-secondary);margin-top:2px}
+
+.res-msg{font-size:14px;color:var(--text-secondary);line-height:1.8;margin-bottom:22px;padding:14px;background:rgba(240,194,127,.05);border-radius:12px;border:1px solid rgba(240,194,127,.1)}
 .res-msg .hl{color:var(--accent-gold);font-weight:700}
-.titles-s{margin-bottom:24px;width:100%}
-.titles-s h3{font-size:16px;color:var(--rose-light);margin-bottom:12px;font-weight:700}
-.t-badge{display:inline-block;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:600;margin:4px}
-.t-badge.hb{background:rgba(183,110,121,.2);color:var(--rose-light);border:1px solid rgba(183,110,121,.3)}
-.t-badge.jb{background:rgba(107,63,160,.2);color:#a78bfa;border:1px solid rgba(107,63,160,.3)}
+.titles-s{margin-bottom:22px;width:100%}
+.titles-s h3{font-size:15px;color:var(--rose-light);margin-bottom:10px;font-weight:700}
+.t-badge{display:inline-block;padding:7px 12px;border-radius:18px;font-size:11px;font-weight:600;margin:3px}
+.t-badge.hb{background:rgba(183,110,121,.15);color:var(--rose-light);border:1px solid rgba(183,110,121,.25)}
+.t-badge.jb{background:rgba(107,63,160,.15);color:#a78bfa;border:1px solid rgba(107,63,160,.25)}
 .det-res{width:100%;max-width:460px}
-.det-res h3{font-size:16px;color:var(--rose-light);margin-bottom:12px;font-weight:700;text-align:center}
-.ri{background:rgba(36,22,53,.6);border:1px solid rgba(183,110,121,.1);border-radius:12px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
-.ri .rq{color:var(--text-secondary);flex:1;margin-left:10px;text-align:right}
-.ri .rb{padding:4px 10px;border-radius:8px;font-weight:600;font-size:12px;white-space:nowrap}
-.ri .rb.hb{background:rgba(183,110,121,.2);color:var(--rose-light)}
-.ri .rb.jb{background:rgba(107,63,160,.2);color:#a78bfa}
-.ri .rb.both{background:rgba(240,194,127,.15);color:var(--accent-gold)}
-.ri .rb.skip{background:rgba(184,165,200,.1);color:var(--text-secondary)}
+.det-res h3{font-size:15px;color:var(--rose-light);margin-bottom:10px;font-weight:700;text-align:center}
+.ri{background:rgba(30,18,50,.5);border:1px solid rgba(183,110,121,.08);border-radius:10px;padding:10px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.ri .rq{color:var(--text-secondary);flex:1;margin-left:8px;text-align:right}
+.ri .rb{padding:3px 8px;border-radius:6px;font-weight:600;font-size:11px;white-space:nowrap}
+.ri .rb.hb{background:rgba(183,110,121,.15);color:var(--rose-light)}
+.ri .rb.jb{background:rgba(107,63,160,.15);color:#a78bfa}
+.ri .rb.both{background:rgba(240,194,127,.1);color:var(--accent-gold)}
+.ri .rb.skip{background:rgba(184,165,200,.08);color:var(--text-secondary)}
+
 .sbox{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100}
 .sparkle{position:absolute;font-size:20px;animation:sparkle .8s ease-out forwards}
 .cbox{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100}
-.confetti{position:absolute;width:10px;height:10px;border-radius:2px;animation:confetti-fall linear forwards}
-.spinner{display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:#c53030;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:9999;transition:transform .4s;max-width:90%;text-align:center}
+.confetti{position:absolute;width:10px;height:10px;border-radius:2px;animation:confettiFall linear forwards}
+.spinner{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(197,48,48,.95);backdrop-filter:blur(10px);color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:600;z-index:9999;transition:transform .4s;max-width:90%;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0)}
-@media(max-width:500px){.card,.q-card{padding:28px 18px;border-radius:20px}.title{font-size:24px}.q-tx{font-size:18px}.v-btn{padding:14px 8px;font-size:14px}.v-btn .b-em{font-size:24px}.s-box .sv{font-size:32px}}
+
+.footer-brand{text-align:center;margin-top:20px;opacity:.3;font-size:11px;color:var(--rose-light);letter-spacing:1px}
+
+@media(max-width:500px){
+.shuruq-name,.shuruq-name::after{font-size:40px}
+.name-decoration{padding:24px 28px}
+.card-body{padding:28px 18px}
+.title{font-size:22px}
+.q-tx{font-size:17px}
+.v-btn{padding:13px 6px;font-size:13px}
+.v-btn .b-em{font-size:20px}
+.s-box .sv{font-size:30px}
+}
 </style>
 </head>
 <body>
-<div class="bg-d"><div class="c"></div><div class="c"></div><div class="c"></div></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
 <div class="sbox" id="sbox"></div>
 <div class="cbox" id="cbox"></div>
 <div class="toast" id="toast"></div>
 
+<!-- LOBBY -->
 <div class="screen active" id="lobbyScr">
-<div class="card">
-<span class="emoji-big">💕</span>
-<h1 class="title">مين أكتر واحد فينا؟</h1>
-<p class="subtitle">العب أونلاين مع شريحتك!<br>اتصلوا ببعض واعرفوا مين الأكتر</p>
-<div class="input-g"><label>اسمك أنت 💫</label><input type="text" id="myName" placeholder="مثلاً: سارة" maxlength="20"></div>
-<button class="btn" id="createBtn" onclick="createRoom()">أنشئ غرفة جديدة 🎮</button>
-<div class="divider">أو</div>
-<div class="input-g"><label>كود الغرفة 🔢</label><input type="text" id="codeIn" placeholder="أدخل الكود هنا" maxlength="6" style="text-align:center;font-size:20px;letter-spacing:4px;font-weight:700"></div>
-<button class="btn btn-s" id="joinBtn" onclick="joinRoom()">ادخل الغرفة 🚀</button>
+<div class="glass" style="max-width:460px;width:100%">
+  <div class="card-body">
+    <div class="name-decoration">
+      <div class="name-ornament-top">✦ ✦ ✦</div>
+      <div class="shuruq-name">شروقتي</div>
+      <div class="name-ornament-bottom">✦ ✦ ✦</div>
+      <div class="name-sub">M O S T &nbsp; L I K E L Y &nbsp; T O</div>
+    </div>
+    <h1 class="title">مين أكتر واحد فينا؟</h1>
+    <p class="subtitle">العب أونلاين مع شريحتك!<br>اتصلوا ببعض واعرفوا مين الأكتر</p>
+    <div class="input-g"><label>اسمك أنت 💫</label><input type="text" id="myName" placeholder="مثلاً: سارة" maxlength="20"></div>
+    <button class="btn" id="createBtn" onclick="createRoom()">أنشئ غرفة جديدة 🎮</button>
+    <div class="divider">أو</div>
+    <div class="input-g"><label>كود الغرفة 🔢</label><input type="text" id="codeIn" placeholder="أدخل الكود هنا" maxlength="6" style="text-align:center;font-size:18px;letter-spacing:4px;font-weight:700"></div>
+    <button class="btn btn-s" id="joinBtn" onclick="joinRoom()">ادخل الغرفة 🚀</button>
+  </div>
 </div>
+<div class="footer-brand">شروقتي ♡ Couples Game</div>
 </div>
 
+<!-- WAITING -->
 <div class="screen" id="waitScr">
-<div class="card">
-<span class="emoji-big">⏳</span>
-<h1 class="title" id="waitTitle">في انتظار شريحتك...</h1>
-<div class="room-code" id="roomDisplay">
-<div class="code-l">كود الغرفة</div>
-<div class="code" id="codeText">------</div>
-<button class="copy-btn" onclick="copyCode()">📋 انسخ الكود</button>
-</div>
-<p style="color:var(--text-secondary);font-size:14px;margin-top:12px" id="waitInfo">شارك الكود مع شريحتك عشان يدخل</p>
-<div class="wait-dots"><span></span><span></span><span></span></div>
-<div id="startWrap" style="display:none;margin-top:20px">
-<p style="color:var(--accent-gold);font-weight:700;margin-bottom:12px;font-size:16px" id="bothReady"></p>
-<button class="btn" onclick="startGame()">ابدأ اللعبة! 🎉</button>
-</div>
+<div class="glass" style="max-width:460px;width:100%">
+  <div class="card-body">
+    <span class="emoji-big">⏳</span>
+    <h1 class="title" id="waitTitle">في انتظار شريحتك...</h1>
+    <div class="room-code">
+      <div class="code-l">كود الغرفة</div>
+      <div class="code" id="codeText">------</div>
+      <button class="copy-btn" onclick="copyCode()">📋 انسخ الكود</button>
+    </div>
+    <p style="color:var(--text-secondary);font-size:13px;margin-top:10px" id="waitInfo">شارك الكود مع شريحتك عشان يدخل</p>
+    <div class="wait-dots"><span></span><span></span><span></span></div>
+    <div id="startWrap" style="display:none;margin-top:18px">
+      <p style="color:var(--accent-gold);font-weight:700;margin-bottom:10px;font-size:15px" id="bothReady"></p>
+      <button class="btn" onclick="startGame()">ابدأ اللعبة! 🎉</button>
+    </div>
+  </div>
 </div>
 </div>
 
+<!-- GAME -->
 <div class="screen" id="gameScr">
-<div class="game-hd">
-<span class="prog-i" id="progTxt">1 / 30</span>
-<span class="prog-i" id="scoreLive"></span>
+<div class="game-hd" style="max-width:460px;margin-bottom:4px">
+  <span class="prog-i" id="progTxt">1 / 30</span>
+  <span class="prog-i" id="scoreLive"></span>
 </div>
-<div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-<div class="q-card" id="qCard">
-<span class="q-em" id="qEm">🤔</span>
-<div class="q-num" id="qNum">السؤال 1 من 30</div>
-<div class="q-tx" id="qTx"></div>
-<div class="vote-btns">
-<button class="v-btn p1" id="vBtn1" onclick="castVote(1)"><span class="b-em">🙋</span><span id="lbl1">...</span></button>
-<button class="v-btn p2" id="vBtn2" onclick="castVote(2)"><span class="b-em">🙋</span><span id="lbl2">...</span></button>
-</div>
-<div class="v-stat" id="vStat"></div>
-<div id="vReveal"></div>
-<button class="skip-btn" id="skipBtn" onclick="skipQ()">تخطي ⏭️</button>
-<div class="next-wrap" id="nextWrap"><button class="btn" onclick="nextQ()" id="nextBtnTxt">السؤال التالي ←</button></div>
+<div class="prog-bar" style="max-width:460px"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+<div class="glass q-card" id="qCard" style="max-width:460px;width:100%">
+  <span class="q-em" id="qEm">🤔</span>
+  <div class="q-num" id="qNum">السؤال 1 من 30</div>
+  <div class="q-tx" id="qTx"></div>
+  <div class="vote-btns">
+    <button class="v-btn p1" id="vBtn1" onclick="castVote(1)"><span class="b-em">🙋</span><span id="lbl1">...</span></button>
+    <button class="v-btn p2" id="vBtn2" onclick="castVote(2)"><span class="b-em">🙋</span><span id="lbl2">...</span></button>
+  </div>
+  <div class="v-stat" id="vStat"></div>
+  <div id="vReveal"></div>
+  <button class="skip-btn" id="skipBtn" onclick="skipQ()">تخطي ⏭️</button>
+  <div class="next-wrap" id="nextWrap"><button class="btn" onclick="nextQ()" id="nextBtnTxt">السؤال التالي ←</button></div>
 </div>
 </div>
 
+<!-- RESULTS -->
 <div class="screen" id="resScr">
-<div class="card" style="max-width:460px;width:100%">
-<span class="emoji-big">🏆</span>
-<h1 class="title">النتيجة النهائية!</h1>
-<div class="score-row">
-<div class="s-box h"><div class="sn" id="rHN">...</div><div class="sv" id="rHS">0</div><div class="sl">تصويت</div></div>
-<div class="s-box j"><div class="sn" id="rJN">...</div><div class="sv" id="rJS">0</div><div class="sl">تصويت</div></div>
+<div class="glass" style="max-width:460px;width:100%">
+  <div class="card-body">
+    <div class="name-decoration" style="padding:16px 30px;margin-bottom:16px">
+      <div class="shuruq-name" style="font-size:28px">شروقتي</div>
+    </div>
+    <span class="emoji-big">🏆</span>
+    <h1 class="title">النتيجة النهائية!</h1>
+    <div class="score-row">
+      <div class="s-box h"><div class="sn" id="rHN">...</div><div class="sv" id="rHS">0</div><div class="sl">تصويت</div></div>
+      <div class="s-box j"><div class="sn" id="rJN">...</div><div class="sv" id="rJS">0</div><div class="sl">تصويت</div></div>
+    </div>
+    <div class="res-msg" id="resMsg"></div>
+    <div class="titles-s" id="titlesS"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn" onclick="playAgain()" style="flex:1">العب مرة ثانية 🔄</button>
+      <button class="btn btn-o" onclick="shareRes()" style="flex:1">شارك النتيجة 📸</button>
+    </div>
+  </div>
 </div>
-<div class="res-msg" id="resMsg"></div>
-<div class="titles-s" id="titlesS"></div>
-<div style="display:flex;gap:12px">
-<button class="btn" onclick="playAgain()" style="flex:1">العب مرة ثانية 🔄</button>
-<button class="btn btn-o" onclick="shareRes()" style="flex:1">شارك النتيجة 📸</button>
-</div>
-</div>
-<div class="det-res" id="detRes" style="max-width:460px;margin-top:20px"></div>
+<div class="det-res" id="detRes" style="max-width:460px;margin-top:16px"></div>
 </div>
 
 <script type="module">
@@ -235,15 +306,12 @@ const Qs=[
 ];
 
 function shuffle(a){const s=[...a];for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]]}return s}
-
 const $=id=>document.getElementById(id);
 let myName="",myCode="",myNum=0,isHost=false,totalQ=30,curQ=0,hasVoted=false,allQs=[],scores={h:0,j:0};
 let roomRef=null,myListeners=[];
-
 function showErr(m){const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000)}
 function switchTo(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");window.scrollTo(0,0)}
 function genCode(){return Math.floor(100000+Math.random()*900000).toString()}
-
 function listen(path,cb){const r=ref(db,path);onValue(r,cb);myListeners.push(r)}
 
 window.createRoom=function(){
@@ -251,297 +319,131 @@ myName=$("myName").value.trim();
 if(!myName){$("myName").style.borderColor="#ff6b9d";return}
 $("myName").style.borderColor="";
 $("createBtn").disabled=true;$("createBtn").innerHTML='<span class="spinner"></span>';
-let code=genCode();
-roomRef=ref(db,"rooms/"+code);
-get(roomRef).then(snap=>{
-if(snap.exists()){code=genCode();roomRef=ref(db,"rooms/"+code)}
-const shuffled=shuffle(Qs);
-return set(roomRef,{
-code,hostName:myName,joinerName:"",
-status:"waiting",currentQ:0,
-questions:JSON.stringify(shuffled),
-scores:{h:0,j:0},totalQ:30,
-hv:null,jv:null,
-history:{}
-});
+let code=genCode();roomRef=ref(db,"rooms/"+code);
+get(roomRef).then(snap=>{if(snap.exists()){code=genCode();roomRef=ref(db,"rooms/"+code)}
+return set(roomRef,{code,hostName:myName,joinerName:"",status:"waiting",currentQ:0,questions:JSON.stringify(shuffle(Qs)),scores:{h:0,j:0},totalQ:30,hv:null,jv:null,history:{}})
 }).then(()=>{
 myCode=code;myNum=1;isHost=true;
-$("codeText").textContent=code;
-$("waitTitle").textContent="في انتظار شريحتك...";
+$("codeText").textContent=code;$("waitTitle").textContent="في انتظار شريحتك...";
 $("waitInfo").textContent="شارك الكود اللي فوق مع شريحتك عشان يدخل";
-switchTo("waitScr");
-onDisconnect(roomRef).update({status:"disconnected"});
-
-listen("rooms/"+code+"/joinerName",snap=>{
-const name=snap.val();
-if(name){
-$("startWrap").style.display="block";
-$("bothReady").textContent=name+" دخل(ت) الغرفة! 🎉";
-$("waitInfo").textContent=name+" جاهز(ة) اللعب!";
-$("startWrap").querySelector(".btn").textContent="ابدأ اللعب مع "+name+"! 🎉";
-}
-});
-listen("rooms/"+code+"/status",snap=>{
-const st=snap.val();
-if(st==="playing")initGame();
-if(st==="finished")showResults();
-});
-}).catch(e=>{showErr("حصل خطأ، جرب تاني");$("createBtn").disabled=false;$("createBtn").textContent="أنشئ غرفة جديدة 🎮"});
+switchTo("waitScr");onDisconnect(roomRef).update({status:"disconnected"});
+listen("rooms/"+code+"/joinerName",snap=>{const n=snap.val();if(n){$("startWrap").style.display="block";$("bothReady").textContent=n+" دخل(ت) الغرفة! 🎉";$("waitInfo").textContent=n+" جاهز(ة) اللعب!";$("startWrap").querySelector(".btn").textContent="ابدأ اللعب مع "+n+"! 🎉"}});
+listen("rooms/"+code+"/status",snap=>{const st=snap.val();if(st==="playing")initGame();if(st==="finished")showResults()});
+}).catch(()=>{showErr("حصل خطأ، جرب تاني");$("createBtn").disabled=false;$("createBtn").textContent="أنشئ غرفة جديدة 🎮"});
 };
 
 window.joinRoom=function(){
-myName=$("myName").value.trim();
-const code=$("codeIn").value.trim();
+myName=$("myName").value.trim();const code=$("codeIn").value.trim();
 if(!myName){$("myName").style.borderColor="#ff6b9d";return}
 if(!code||code.length!==6){$("codeIn").style.borderColor="#ff6b9d";return}
 $("myName").style.borderColor="";$("codeIn").style.borderColor="";
 $("joinBtn").disabled=true;$("joinBtn").innerHTML='<span class="spinner"></span>';
 roomRef=ref(db,"rooms/"+code);
-get(roomRef).then(snap=>{
-if(!snap.exists())throw new Error("notfound");
-const room=snap.val();
-if(room.joinerName&&room.joinerName!=="")throw new Error("full");
-return update(roomRef,{joinerName:myName,status:"ready"});
+get(roomRef).then(snap=>{if(!snap.exists())throw new Error("notfound");
+const room=snap.val();if(room.joinerName&&room.joinerName!=="")throw new Error("full");
+return update(roomRef,{joinerName:myName,status:"ready"})
 }).then(()=>{
 myCode=$("codeIn").value.trim();myNum=2;isHost=false;
-$("codeText").textContent=myCode;
-$("waitTitle").textContent="ادخلت الغرفة!";
+$("codeText").textContent=myCode;$("waitTitle").textContent="ادخلت الغرفة!";
 $("waitInfo").textContent="مستنيين صاحب الغرفة يبدأ اللعبة...";
-switchTo("waitScr");
-onDisconnect(roomRef).update({status:"disconnected"});
-listen("rooms/"+myCode+"/status",snap=>{
-const st=snap.val();
-if(st==="playing")initGame();
-if(st==="finished")showResults();
-});
-}).catch(e=>{
-$("joinBtn").disabled=false;$("joinBtn").textContent="ادخل الغرفة 🚀";
-if(e.message==="notfound")showErr("الغرفة مش موجودة! تأكد من الكود.");
+switchTo("waitScr");onDisconnect(roomRef).update({status:"disconnected"});
+listen("rooms/"+myCode+"/status",snap=>{const st=snap.val();if(st==="playing")initGame();if(st==="finished")showResults()});
+}).catch(e=>{$("joinBtn").disabled=false;$("joinBtn").textContent="ادخل الغرفة 🚀";
+if(e.message==="notfound")showErr("الغرفة مش موجودة!");
 else if(e.message==="full")showErr("الغرفة مليانة!");
-else showErr("حصل خطأ، جرب تاني");
-});
+else showErr("حصل خطأ، جرب تاني")});
 };
 
 $("codeIn").addEventListener("keydown",e=>{if(e.key==="Enter")joinRoom()});
 $("myName").addEventListener("keydown",e=>{if(e.key==="Enter"){if($("codeIn").value.trim())joinRoom();else createRoom()}});
+window.copyCode=function(){navigator.clipboard.writeText(myCode).then(()=>{const b=document.querySelector(".copy-btn");b.textContent="✅ تم النسخ!";setTimeout(()=>b.textContent="📋 انسخ الكود",2000)}).catch(()=>{})};
 
-window.copyCode=function(){
-navigator.clipboard.writeText(myCode).then(()=>{
-const b=document.querySelector(".copy-btn");b.textContent="✅ تم النسخ!";
-setTimeout(()=>b.textContent="📋 انسخ الكود",2000);
-}).catch(()=>{});
-};
+window.startGame=function(){if(!isHost)return;get(roomRef).then(snap=>{const room=snap.val();allQs=JSON.parse(room.questions);totalQ=room.totalQ||30;return update(roomRef,{status:"playing",currentQ:0,scores:{h:0,j:0},history:{}})})};
 
-window.startGame=function(){
-if(!isHost)return;
-get(roomRef).then(snap=>{
-const room=snap.val();
-allQs=JSON.parse(room.questions);totalQ=room.totalQ||30;
-return update(roomRef,{status:"playing",currentQ:0,scores:{h:0,j:0},history:{}});
-});
-};
-
-function initGame(){
-get(roomRef).then(snap=>{
-const room=snap.val();
-allQs=JSON.parse(room.questions);totalQ=room.totalQ||30;
-$("lbl1").textContent=room.hostName;
-$("lbl2").textContent=room.joinerName;
-switchTo("gameScr");
-
-listen("rooms/"+myCode+"/currentQ",snap=>{
-const idx=snap.val();
-if(idx!==null&&idx!==undefined)showQ(idx);
-});
-
-listen("rooms/"+myCode+"/scores",snap=>{
-const s=snap.val();
-if(s){scores={h:s.h||0,j:s.j||0};$("scoreLive").textContent="💛 "+scores.h+" - "+scores.j}
-});
-
-listen("rooms/"+myCode+"/hv",snap=>{
-const val=snap.val();
-if(val!==null)checkBothVoted();
-});
-
-listen("rooms/"+myCode+"/jv",snap=>{
-const val=snap.val();
-if(val!==null)checkBothVoted();
-});
-});
-}
+function initGame(){get(roomRef).then(snap=>{const room=snap.val();allQs=JSON.parse(room.questions);totalQ=room.totalQ||30;
+$("lbl1").textContent=room.hostName;$("lbl2").textContent=room.joinerName;switchTo("gameScr");
+listen("rooms/"+myCode+"/currentQ",snap=>{const idx=snap.val();if(idx!==null&&idx!==undefined)showQ(idx)});
+listen("rooms/"+myCode+"/scores",snap=>{const s=snap.val();if(s){scores={h:s.h||0,j:s.j||0};$("scoreLive").textContent="💛 "+scores.h+" - "+scores.j}});
+listen("rooms/"+myCode+"/hv",snap=>{if(snap.val()!==null)checkBothVoted()});
+listen("rooms/"+myCode+"/jv",snap=>{if(snap.val()!==null)checkBothVoted()});
+})}
 
 let prevQ=-1;
-function showQ(idx){
-if(idx===prevQ&&curQ===idx&&hasVoted)return;
-prevQ=idx;curQ=idx;hasVoted=false;
-if(idx>=allQs.length)return;
-const q=allQs[idx];
-$("qEm").textContent=q.e;
-$("qNum").textContent="السؤال "+(idx+1)+" من "+totalQ;
-$("qTx").textContent=q.q;
-$("progTxt").textContent=(idx+1)+" / "+totalQ;
+function showQ(idx){if(idx===prevQ&&curQ===idx&&hasVoted)return;prevQ=idx;curQ=idx;hasVoted=false;
+if(idx>=allQs.length)return;const q=allQs[idx];
+$("qEm").textContent=q.e;$("qNum").textContent="السؤال "+(idx+1)+" من "+totalQ;
+$("qTx").textContent=q.q;$("progTxt").textContent=(idx+1)+" / "+totalQ;
 $("progFill").style.width=((idx)/totalQ*100)+"%";
-$("vStat").textContent="";$("vStat").className="v-stat";
-$("vReveal").innerHTML="";
-$("skipBtn").style.display="block";
-$("nextWrap").className="next-wrap";
+$("vStat").textContent="";$("vStat").className="v-stat";$("vReveal").innerHTML="";
+$("skipBtn").style.display="block";$("nextWrap").className="next-wrap";
 $("vBtn1").className="v-btn p1";$("vBtn2").className="v-btn p2";
 $("vBtn1").disabled=false;$("vBtn2").disabled=false;
 if(!isHost)$("nextWrap").style.display="none";
-const c=$("qCard");c.style.animation="none";c.offsetHeight;c.style.animation="scaleIn .4s ease-out";
-}
+const c=$("qCard");c.style.animation="none";c.offsetHeight;c.style.animation="scaleIn .35s ease-out"}
 
-function checkBothVoted(){
-get(roomRef).then(snap=>{
-const room=snap.val();
-const hv=room.hv,jv=room.jv;
+function checkBothVoted(){get(roomRef).then(snap=>{const room=snap.val();const hv=room.hv,jv=room.jv;
 if(hv===null||jv===null||hv===undefined||jv===undefined)return;
+$("vBtn1").disabled=true;$("vBtn2").disabled=true;$("skipBtn").style.display="none";
+const rv=$("vReveal");
+if(hv!=="skip"&&jv!=="skip"&&hv===jv){const n=hv===1?room.hostName:room.joinerName;rv.innerHTML='<div class="v-reveal agree"><p>أنتما اتفقتوا! 💕<br><strong>'+n+'</strong> هو(ي) الأكتر واحد</p></div>'}
+else if(hv==="skip"&&jv==="skip")rv.innerHTML='<div class="v-reveal disagree"><p>الاتنين خطّتوا! 😅</p></div>';
+else if(hv==="skip"||jv==="skip"){const sk=hv==="skip"?room.hostName:room.joinerName;const vt=hv==="skip"?room.joinerName:room.hostName;rv.innerHTML='<div class="v-reveal disagree"><p>'+sk+' خطّط... '+vt+' بصّت! 🤔</p></div>'}
+else rv.innerHTML='<div class="v-reveal disagree"><p>مختلفين! 🤔<br>'+room.hostName+' اختار(ت) نفسه/ها... '+room.joinerName+' اختار(ت) نفسه/ها!</p></div>';
+$("vStat").textContent="الاتنين بصّتوا! 🎉";$("vStat").className="v-stat show";createSparkles();
+if(isHost){$("nextWrap").className="next-wrap show";if(curQ+1>=totalQ)$("nextBtnTxt").textContent="عرض النتيجة 🏆"}})}
 
-$("vBtn1").disabled=true;$("vBtn2").disabled=true;
-$("skipBtn").style.display="none";
+window.castVote=function(v){if(hasVoted)return;hasVoted=true;
+update(roomRef,{[isHost?"hv":"jv"]:v});
+const btn=v===1?$("vBtn1"):$("vBtn2");btn.classList.add("sel");
+$("vBtn1").disabled=true;$("vBtn2").disabled=true;$("skipBtn").style.display="none";
+$("vStat").textContent="敝ت التصويت! مستنيين الشريك... ⏳";$("vStat").className="v-stat show"};
 
-const reveal=$("vReveal");
-if(hv!=="skip"&&jv!=="skip"&&hv===jv){
-const n=hv===1?room.hostName:room.joinerName;
-reveal.innerHTML='<div class="v-reveal agree"><p>أنتما اتفقتوا! 💕<br><strong>'+n+'</strong> هو(ي) الأكتر واحد</p></div>';
-}else if(hv==="skip"&&jv==="skip"){
-reveal.innerHTML='<div class="v-reveal disagree"><p>الاتنين خطّتوا! 😅</p></div>';
-}else if(hv==="skip"||jv==="skip"){
-const skipper=hv==="skip"?room.hostName:room.joinerName;
-const voter=hv==="skip"?room.joinerName:room.hostName;
-reveal.innerHTML='<div class="v-reveal disagree"><p>'+skipper+' خطّط... '+voter+' بصّت! 🤔</p></div>';
-}else{
-reveal.innerHTML='<div class="v-reveal disagree"><p>مختلفين! 🤔<br>'+room.hostName+' اختار(ت) نفسه/ها... '+room.joinerName+' اختار(ت) نفسه/ها!</p></div>';
-}
-$("vStat").textContent="الاتنين بصّتوا! 🎉";
-$("vStat").className="v-stat show";
-createSparkles();
+window.skipQ=function(){if(hasVoted)return;hasVoted=true;
+update(roomRef,{[isHost?"hv":"jv"]:"skip"});
+$("vBtn1").disabled=true;$("vBtn2").disabled=true;$("skipBtn").style.display="none";
+$("vStat").textContent="تخطيت السؤال! ⏭️";$("vStat").className="v-stat show"};
 
-if(isHost){
-$("nextWrap").className="next-wrap show";
-if(curQ+1>=totalQ)$("nextBtnTxt").textContent="عرض النتيجة 🏆";
-}
-});
-}
+window.nextQ=function(){get(roomRef).then(snap=>{const room=snap.val();const nq=room.currentQ+1;const h=room.history||{};h[curQ]={hv:room.hv,jv:room.jv};
+if(nq>=totalQ)return update(roomRef,{currentQ:nq,history:h,scores:scores,status:"finished",hv:null,jv:null});
+return update(roomRef,{currentQ:nq,history:h,hv:null,jv:null})})};
 
-window.castVote=function(v){
-if(hasVoted)return;
-hasVoted=true;
-const vKey=isHost?"hv":"jv";
-update(roomRef,{[vKey]:v});
-const btn=v===1?$("vBtn1"):$("vBtn2");
-btn.classList.add("sel");
-$("vBtn1").disabled=true;$("vBtn2").disabled=true;
-$("skipBtn").style.display="none";
-$("vStat").textContent="敝ت التصويت! مستنيين الشريك... ⏳";
-$("vStat").className="v-stat show";
-};
-
-window.skipQ=function(){
-if(hasVoted)return;
-hasVoted=true;
-const vKey=isHost?"hv":"jv";
-update(roomRef,{[vKey]:"skip"});
-$("vBtn1").disabled=true;$("vBtn2").disabled=true;
-$("skipBtn").style.display="none";
-$("vStat").textContent="تخطيت السؤال! ⏭️";
-$("vStat").className="v-stat show";
-};
-
-window.nextQ=function(){
-get(roomRef).then(snap=>{
-const room=snap.val();
-const newQ=room.currentQ+1;
-const history=room.history||{};
-history[curQ]={hv:room.hv,jv:room.jv};
-
-if(newQ>=totalQ){
-return update(roomRef,{currentQ:newQ,history,scores:s,status:"finished",hv:null,jv:null});
-}
-return update(roomRef,{currentQ:newQ,history,hv:null,jv:null});
-});
-};
-
-function showResults(){
-get(roomRef).then(snap=>{
-const room=snap.val();
-const s=room.scores||{h:0,j:0};
-const hN=room.hostName,jN=room.joinerName;
-const qs=JSON.parse(room.questions);
-const history=room.history||{};
-
-$("rHN").textContent=hN;$("rJN").textContent=jN;
-$("rHS").textContent=s.h;$("rJS").textContent=s.j;
-
-const diff=Math.abs(s.h-s.j);
-let msg="";
+function showResults(){get(roomRef).then(snap=>{const room=snap.val();const s=room.scores||{h:0,j:0};const hN=room.hostName,jN=room.joinerName;
+const qs=JSON.parse(room.questions);const history=room.history||{};
+$("rHN").textContent=hN;$("rJN").textContent=jN;$("rHS").textContent=s.h;$("rJS").textContent=s.j;
+const diff=Math.abs(s.h-s.j);let msg="";
 if(s.h===s.j)msg='<span class="hl">'+hN+'</span> و<span class="hl">'+jN+'</span> متساويين تماماً! 💕 تعكسوا بعض!';
-else if(diff<=3)msg='<span class="hl">'+hN+'</span> و<span class="hl">'+jN+'</span> قريبين من بعض! شبه بعض في كل حاجة 💞';
-else{const top=s.h>s.j?hN:jN;const topS=Math.max(s.h,s.j);msg='<span class="hl">'+top+'</span> عنده(ا) '+topS+' تصويت! أكتر واحد فينا بجد! 🏆'}
+else if(diff<=3)msg='<span class="hl">'+hN+'</span> و<span class="hl">'+jN+'</span> قريبين من بعض! 💞';
+else{const top=s.h>s.j?hN:jN;msg='<span class="hl">'+top+'</span> عنده(ا) '+Math.max(s.h,s.j)+' تصويت! 🏆'}
 $("resMsg").innerHTML=msg;
+const te=$("titlesS");te.innerHTML='<h3>ملخص الألقاب 🏅</h3>';let bc=0;
+qs.forEach((q,i)=>{const h=history[i];if(!h)return;
+if(h.hv!==undefined&&h.hv!=="skip"&&h.hv!==null){te.innerHTML+='<span class="t-badge hb">'+hN+': '+q.q.replace('مين أكتر واحد فينا','')+'</span>';bc++}
+if(h.jv!==undefined&&h.jv!=="skip"&&h.jv!==null&&h.hv!==h.jv){te.innerHTML+='<span class="t-badge jb">'+jN+': '+q.q.replace('مين أكتر واحد فينا','')+'</span>';bc++}});
+if(bc===0)te.innerHTML="";
+const d=$("detRes");d.innerHTML='<h3>تفاصيل كل سؤال 📋</h3>';
+qs.forEach((q,i)=>{const h=history[i];let b="";
+if(!h)b='<span class="rb skip">⏭️ لم يُلعَب</span>';
+else if(h.hv==="skip"&&h.jv==="skip")b='<span class="rb skip">⏭️ تم التخطي</span>';
+else if(h.hv==="skip"||h.jv==="skip"||h.hv===undefined||h.jv===undefined)b='<span class="rb skip">⏭️ لم يُصوَّت بالكامل</span>';
+else if(h.hv===h.jv){const n=h.hv===1?hN:jN;b='<span class="rb both">🤝 '+n+'</span>'}
+else b='<span class="rb hb">'+hN+'</span> <span class="rb jb">'+jN+'</span>';
+d.innerHTML+='<div class="ri"><span class="rq">'+q.e+' '+q.q+'</span>'+b+'</div>'});
+switchTo("resScr");createConfetti()})}
 
-const titlesEl=$("titlesS");
-titlesEl.innerHTML='<h3>ملخص الألقاب 🏅</h3>';
-let bc=0;
-qs.forEach((q,i)=>{
-const h=history[i];
-if(!h)return;
-if(h.hv!==undefined&&h.hv!=="skip"&&h.hv!==null){
-titlesEl.innerHTML+='<span class="t-badge hb">'+hN+': '+q.q.replace('مين أكتر واحد فينا','')+'</span>';bc++}
-if(h.jv!==undefined&&h.jv!=="skip"&&h.jv!==null&&h.hv!==h.jv){
-titlesEl.innerHTML+='<span class="t-badge jb">'+jN+': '+q.q.replace('مين أكتر واحد فينا','')+'</span>';bc++}
-});
-if(bc===0)titlesEl.innerHTML="";
+window.playAgain=function(){get(roomRef).then(snap=>{return update(snap.ref,{status:"waiting",currentQ:0,history:{},scores:{h:0,j:0},hv:null,jv:null})
+}).then(()=>{scores={h:0,j:0};hasVoted=false;curQ=0;prevQ=-1;$("startWrap").style.display=isHost?"block":"none";
+$("waitTitle").textContent="جاهزين لجولة جديدة!";$("waitInfo").textContent="اضغط ابدأ لما تكونوا جاهزين";switchTo("waitScr")})};
 
-const det=$("detRes");
-det.innerHTML='<h3>تفاصيل كل سؤال 📋</h3>';
-qs.forEach((q,i)=>{
-const h=history[i];
-let badge="";
-if(!h){badge='<span class="rb skip">⏭️ لم يُلعَب</span>'}
-else if(h.hv==="skip"&&h.jv==="skip"){badge='<span class="rb skip">⏭️ تم التخطي</span>'}
-else if(h.hv==="skip"||h.jv==="skip"||h.hv===undefined||h.jv===undefined){
-badge='<span class="rb skip">⏭️ لم يُصوَّت بالكامل</span>'}
-else if(h.hv===h.jv){const n=h.hv===1?hN:jN;badge='<span class="rb both">🤝 '+n+'</span>'}
-else{badge='<span class="rb hb">'+hN+'</span> <span class="rb jb">'+jN+'</span>'}
-det.innerHTML+='<div class="ri"><span class="rq">'+q.e+' '+q.q+'</span>'+badge+'</div>';
-});
-
-switchTo("resScr");createConfetti();
-});
-}
-
-window.playAgain=function(){
-get(roomRef).then(snap=>{
-const room=snap.val();
-return update(roomRef,{status:"waiting",currentQ:0,history:{},scores:{h:0,j:0},hv:null,jv:null});
-}).then(()=>{
-scores={h:0,j:0};hasVoted=false;curQ=0;prevQ=-1;
-$("startWrap").style.display=isHost?"block":"none";
-$("waitTitle").textContent="جاهزين لجولة جديدة!";
-$("waitInfo").textContent="اضغط ابدأ لما تكونوا جاهزين";
-switchTo("waitScr");
-});
-};
-
-window.shareRes=function(){
-const hN=$("rHN").textContent,jN=$("rJN").textContent;
-const hS=$("rHS").textContent,jS=$("rJS").textContent;
-const txt="💕 مين أكتر واحد فينا؟ 💕\n📊 "+hN+": "+hS+" | "+jN+": "+jS+"\n💎 لعبنا "+totalQ+" سؤال\nجربوا اللعبة! 🎮";
+window.shareRes=function(){const hN=$("rHN").textContent,jN=$("rJN").textContent;
+const txt="💕 مين أكتر واحد فينا؟ 💕\n📊 "+hN+": "+$("rHS").textContent+" | "+jN+": "+$("rJS").textContent+"\n💎 لعبنا "+totalQ+" سؤال\nشروقتي ♡";
 if(navigator.share)navigator.share({text:txt}).catch(()=>{});
 else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(()=>showErr("تم النسخ! ✅")).catch(()=>prompt("انسخ:",txt));
-else prompt("انسخ:",txt);
-};
+else prompt("انسخ:",txt)};
 
-function createSparkles(){
-const box=$("sbox");const ems=['✨','💫','⭐','💕','💖','🌟'];
-for(let i=0;i<8;i++){setTimeout(()=>{const s=document.createElement("div");s.className="sparkle";s.textContent=ems[Math.floor(Math.random()*ems.length)];s.style.left=Math.random()*80+10+"%";s.style.top=Math.random()*60+20+"%";box.appendChild(s);setTimeout(()=>s.remove(),1000)},i*80)}
-}
-function createConfetti(){
-const box=$("cbox");const cols=['#b76e79','#6b3fa0','#e8c4c8','#f0c27f','#ff6b9d','#a78bfa'];
-for(let i=0;i<50;i++){setTimeout(()=>{const c=document.createElement("div");c.className="confetti";c.style.left=Math.random()*100+"%";c.style.backgroundColor=cols[Math.floor(Math.random()*cols.length)];c.style.width=Math.random()*8+5+"px";c.style.height=Math.random()*8+5+"px";c.style.animationDuration=Math.random()*2+2+"s";box.appendChild(c);setTimeout(()=>c.remove(),4500)},i*50)}
-}
+function createSparkles(){const box=$("sbox");const ems=['✨','💫','⭐','💕','💖','🌟'];
+for(let i=0;i<8;i++){setTimeout(()=>{const s=document.createElement("div");s.className="sparkle";s.textContent=ems[Math.floor(Math.random()*ems.length)];s.style.left=Math.random()*80+10+"%";s.style.top=Math.random()*60+20+"%";box.appendChild(s);setTimeout(()=>s.remove(),1000)},i*80)}}
+function createConfetti(){const box=$("cbox");const cols=['#b76e79','#6b3fa0','#e8c4c8','#f0c27f','#ff6b9d','#a78bfa'];
+for(let i=0;i<50;i++){setTimeout(()=>{const c=document.createElement("div");c.className="confetti";c.style.left=Math.random()*100+"%";c.style.backgroundColor=cols[Math.floor(Math.random()*cols.length)];c.style.width=Math.random()*8+5+"px";c.style.height=Math.random()*8+5+"px";c.style.animationDuration=Math.random()*2+2+"s";box.appendChild(c);setTimeout(()=>c.remove(),4500)},i*50)}}
 </script>
 </body>
 </html>

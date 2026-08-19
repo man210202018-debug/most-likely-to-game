@@ -179,6 +179,43 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
 .footer-brand{text-align:center;margin-top:20px;opacity:.3;font-size:11px;color:var(--rose-light);letter-spacing:1px}
 
+/* ===== TRUTH OR DARE ===== */
+.tod-choice{display:flex;gap:14px;margin-top:24px;width:100%}
+.tod-btn{flex:1;padding:24px 12px;border:2px solid;border-radius:18px;background:transparent;font-family:'Tajawal',sans-serif;cursor:pointer;transition:all .3s;text-align:center}
+.tod-btn.truth{border-color:rgba(72,187,120,.4);color:#68d391}
+.tod-btn.truth:hover,.tod-btn.truth.sel{background:rgba(72,187,120,.12);border-color:#68d391;transform:translateY(-2px);box-shadow:0 4px 20px rgba(72,187,120,.2)}
+.tod-btn.dare{border-color:rgba(245,101,101,.4);color:#fc8181}
+.tod-btn.dare:hover,.tod-btn.dare.sel{background:rgba(245,101,101,.12);border-color:#fc8181;transform:translateY(-2px);box-shadow:0 4px 20px rgba(245,101,101,.2)}
+.tod-btn:active{transform:translateY(0) scale(.97)}
+.tod-btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important}
+.tod-btn .tod-icon{font-size:36px;display:block;margin-bottom:8px}
+.tod-btn .tod-label{font-size:18px;font-weight:800}
+.tod-btn .tod-sub{font-size:11px;opacity:.6;margin-top:4px}
+.tod-question{font-size:22px;font-weight:800;line-height:1.7;color:var(--text-primary);margin:20px 0;text-align:center}
+.tod-type-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:16px}
+.tod-type-badge.truth-badge{background:rgba(72,187,120,.15);color:#68d391;border:1px solid rgba(72,187,120,.3)}
+.tod-type-badge.dare-badge{background:rgba(245,101,101,.15);color:#fc8181;border:1px solid rgba(245,101,101,.3)}
+.tod-answer-btns{display:flex;gap:10px;margin-top:16px;width:100%}
+.tod-answer-btns .btn{flex:1;padding:13px;font-size:15px}
+.penalty-card{margin-top:20px;padding:16px;background:rgba(240,194,127,.08);border:1px solid rgba(240,194,127,.2);border-radius:14px;text-align:center;animation:slideUp .4s ease}
+.penalty-card .penalty-title{font-size:16px;font-weight:800;color:var(--accent-gold);margin-bottom:8px}
+.penalty-card .penalty-text{font-size:14px;color:var(--text-secondary);line-height:1.6}
+.tod-round{font-size:13px;color:var(--text-secondary);font-weight:500;margin-bottom:4px}
+.tod-chooser{font-size:14px;color:var(--accent-gold);font-weight:700;margin-bottom:12px}
+.tod-timer{font-size:14px;color:var(--accent-pink);font-weight:600;margin-top:10px;min-height:20px}
+.tod-turn-info{padding:12px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid var(--glass-border);margin-top:12px;text-align:center}
+.tod-turn-info p{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.tod-turn-info strong{color:var(--rose-light)}
+
+.tod-scores{display:flex;gap:12px;margin-bottom:20px;width:100%}
+.tod-score-box{flex:1;padding:14px 8px;border-radius:12px;text-align:center}
+.tod-score-box.h{background:rgba(183,110,121,.08);border:1px solid rgba(183,110,121,.2)}
+.tod-score-box.j{background:rgba(107,63,160,.08);border:1px solid rgba(107,63,160,.2)}
+.tod-score-box .tsn{font-size:12px;color:var(--text-secondary);margin-bottom:4px}
+.tod-score-box .tsv{font-size:28px;font-weight:900}
+.tod-score-box.h .tsv{color:var(--rose-light)}
+.tod-score-box.j .tsv{color:#a78bfa}
+
 @media(max-width:500px){
 .shuruq-name,.shuruq-name::after{font-size:40px}
 .name-decoration{padding:24px 28px}
@@ -228,12 +265,11 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     </div>
     <div class="game-card-arrow">←</div>
   </div>
-  <div class="game-card game-card-coming">
+  <div class="game-card" onclick="goToTODLobby()">
     <div class="game-card-icon gold-bg">💌</div>
     <div class="game-card-info">
-      <div class="game-card-title">Truth or Dare</div>
-      <div class="game-card-desc">اختاروا بين الحقيقة أو التحدي</div>
-      <div class="game-card-badge">قريباً ✨</div>
+      <div class="game-card-title">صراحة ولا تحدي؟</div>
+      <div class="game-card-desc">اختاروا بين الحقيقة أو التحدي، وعوا المغامرة!</div>
     </div>
     <div class="game-card-arrow">←</div>
   </div>
@@ -325,6 +361,122 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 <div class="det-res" id="detRes" style="max-width:460px;margin-top:16px"></div>
 </div>
 
+<!-- TOD LOBBY -->
+<div class="screen" id="todLobbyScr">
+<div class="back-btn" onclick="goHome()">→</div>
+<div class="glass" style="max-width:460px;width:100%">
+  <div class="card-body">
+    <span class="emoji-big">💌</span>
+    <h1 class="title">صراحة ولا تحدي؟</h1>
+    <p class="subtitle">اختاروا بين الحقيقة أو التحدي!</p>
+    <div style="padding:14px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid var(--glass-border);margin-bottom:18px;text-align:right">
+      <p style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin:0">
+        🟢 <strong style="color:#68d391">صراحة:</strong> اسألوا سؤال صريح وعّم<br>
+        🔴 <strong style="color:#fc8181">تحدي:</strong> قدّموا تحدي ممتع للشريك<br>
+        ⭐ لو رفض، اختر عقوبة من العقوبات!
+      </p>
+    </div>
+    <div class="input-g"><label>اسمك أنت 💫</label><input type="text" id="todMyName" placeholder="مثلاً: سارة" maxlength="20"></div>
+    <button class="btn" id="todCreateBtn" onclick="todCreateRoom()">أنشئ غرفة جديدة 🎮</button>
+    <div class="divider">أو</div>
+    <div class="input-g"><label>كود الغرفة 🔢</label><input type="text" id="todCodeIn" placeholder="أدخل الكود هنا" maxlength="6" style="text-align:center;font-size:18px;letter-spacing:4px;font-weight:700"></div>
+    <button class="btn btn-s" id="todJoinBtn" onclick="todJoinRoom()">ادخل الغرفة 🚀</button>
+  </div>
+</div>
+</div>
+
+<!-- TOD WAITING -->
+<div class="screen" id="todWaitScr">
+<div class="glass" style="max-width:460px;width:100%">
+  <div class="card-body">
+    <span class="emoji-big">⏳</span>
+    <h1 class="title" id="todWaitTitle">في انتظار شريحتك...</h1>
+    <div class="room-code">
+      <div class="code-l">كود الغرفة</div>
+      <div class="code" id="todCodeText">------</div>
+      <button class="copy-btn" onclick="todCopyCode()">📋 انسخ الكود</button>
+    </div>
+    <p style="color:var(--text-secondary);font-size:13px;margin-top:10px" id="todWaitInfo">شارك الكود مع شريحتك</p>
+    <div class="wait-dots"><span></span><span></span><span></span></div>
+    <div id="todStartWrap" style="display:none;margin-top:18px">
+      <p style="color:var(--accent-gold);font-weight:700;margin-bottom:10px;font-size:15px" id="todBothReady"></p>
+      <button class="btn" onclick="todStartGame()">ابدأ اللعبة! 🎉</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TOD GAME -->
+<div class="screen" id="todGameScr">
+<div class="game-hd" style="max-width:460px;margin-bottom:4px">
+  <span class="prog-i tod-round" id="todRoundTxt">الجولة 1 من 15</span>
+  <span class="prog-i" id="todScoreLive"></span>
+</div>
+<div class="prog-bar" style="max-width:460px"><div class="prog-fill" id="todProgFill" style="width:0%"></div></div>
+<div class="glass q-card" id="todCard" style="max-width:460px;width:100%">
+  <!-- PHASE 1: Chooser picks Truth or Dare -->
+  <div id="todPhase1">
+    <div class="tod-chooser" id="todChooserName">... يختار(ة)</div>
+    <div class="tod-turn-info">
+      <p><strong id="todTargetName">...</strong> هو(ي) اللي هيلعب!</p>
+    </div>
+    <div class="tod-choice">
+      <button class="tod-btn truth" onclick="todChoose('truth')">
+        <span class="tod-icon">🟢</span>
+        <span class="tod-label">صراحة</span>
+        <span class="tod-sub">سؤال صريح</span>
+      </button>
+      <button class="tod-btn dare" onclick="todChoose('dare')">
+        <span class="tod-icon">🔴</span>
+        <span class="tod-label">تحدي</span>
+        <span class="tod-sub">تحدي ممتع</span>
+      </button>
+    </div>
+  </div>
+  <!-- PHASE 2: Player sees the truth/dare -->
+  <div id="todPhase2" style="display:none">
+    <div class="tod-type-badge" id="todTypeBadge">صراحة 🟢</div>
+    <div class="tod-question" id="todQuestion"></div>
+    <div class="tod-timer" id="todTimer"></div>
+    <div class="tod-answer-btns">
+      <button class="btn" style="background:linear-gradient(135deg,#48bb78,#38a169)" onclick="todAccept()">نجحت! ✅</button>
+      <button class="btn btn-o" style="border-color:rgba(245,101,101,.4);color:#fc8181" onclick="todRefuse()">رفضت! 😱</button>
+    </div>
+  </div>
+  <!-- PHASE 3: Penalty -->
+  <div id="todPhase3" style="display:none">
+    <div class="penalty-card">
+      <div class="penalty-title">⭐ عقوبة!</div>
+      <div class="penalty-text" id="todPenalty"></div>
+    </div>
+    <button class="btn" style="margin-top:16px" onclick="todNextTurn()">الجولة التالية ←</button>
+  </div>
+</div>
+</div>
+
+<!-- TOD RESULTS -->
+<div class="screen" id="todResScr">
+<div class="glass" style="max-width:460px;width:100%">
+  <div class="card-body">
+    <div class="name-decoration" style="padding:14px 24px;margin-bottom:12px">
+      <div class="shuruq-name" style="font-size:26px">شروقتي</div>
+    </div>
+    <span class="emoji-big">🏆</span>
+    <h1 class="title">خلصنا!</h1>
+    <div class="tod-scores">
+      <div class="tod-score-box h"><div class="tsn" id="todRHN">...</div><div class="tsv" id="todRHS">0</div><div class="tsn">ulls</div></div>
+      <div class="tod-score-box j"><div class="tsn" id="todRJN">...</div><div class="tsv" id="todRJS">0</div><div class="tsn">ulls</div></div>
+    </div>
+    <div class="res-msg" id="todResMsg"></div>
+    <div id="todResHistory" style="width:100%;text-align:right;margin-bottom:20px"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn" onclick="todPlayAgain()" style="flex:1">العب مرة ثانية 🔄</button>
+      <button class="btn btn-o" onclick="todShareRes()" style="flex:1">شارك النتيجة 📸</button>
+    </div>
+  </div>
+</div>
+</div>
+
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import{getDatabase,ref,set,get,update,onValue,onDisconnect}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -377,6 +529,300 @@ function listen(path,cb){const r=ref(db,path);onValue(r,cb);myListeners.push(r)}
 
 window.goToLobby=function(){switchTo("lobbyScr")};
 window.goHome=function(){switchTo("homeScr")};
+window.goToTODLobby=function(){switchTo("todLobbyScr")};
+
+/* ========== TRUTH OR DARE ========== */
+const TOD_TRUTH=[
+"احكيلي عن أول لحظة حبيتني فيها؟",
+"اي حاجة عملتها وندمت عليها في علاقتنا؟",
+"بتحس ب jealousy امتى أكتر؟",
+"ايه أكتر حاجة محتاج تحسسني بيها؟",
+"想过 نattered عنده اوي امتى؟",
+"بتحلم بيا في نومك كتير؟",
+"ايه أكبر سر مخبيه عليا؟",
+"ايه الجملة اللي لو سمعتها مني هتبتسم طول اليوم؟",
+"بتحس إني بحبك أكتر ولا إنت بتحبني أكتر؟",
+"أي ذكرى في علاقتنا مش ممكن تنساها؟",
+"ايه الغلطة اللي عايز تصلحها في نفسك؟",
+"بتحب تทำอะไร مع بعض لما بنكون لوحدنا؟",
+"ايه أكتر حاجة خلّتك تقع في حبي؟",
+"คนuta محتاج مني في العلاقة دي؟",
+"ايه الشيء اللي لو قولتهولك هتبكي من الفرح؟",
+"علاقتنا في 3 كلمات، هتقول ايه؟",
+"胆敢 تقولي الحقيقةFULL: بتحب لوني ايه فيك أكتر؟",
+"ايه أكتر حاجة بتخاف تفقدها فيا؟",
+"해도 لو人生 تبدأ تاني، هتختارني تاني؟",
+"احكيلي حاجة ما قولهاش لحد قبلي؟",
+"بتحس بالفراغ لما بنippy نتكلم؟",
+"ايه الحاجة اللي لو عملتها هتفاجئني؟",
+"بتمنى إيه لعلاقتنا في المستقبل؟",
+"ما هو أكتر something بيحبطك فيا؟",
+"ايه أكتر لحظة حسّيت فيها بالامان معايا؟",
+"胆敢 تقولي something ما قولهاش لأي حد؟",
+"عندك something حابب نغيرها في طريقة تعاملنا؟",
+"ايه الشيء اللي وصلك عن طريق غلط وكنت محتار تقولي ولا لأ؟",
+"بتحس إننا متفاهمين enough ولا في حاجات ناقصة؟",
+"胆敢 تقوللي something محتاج اسمعه دلوقتي؟"
+];
+
+const TOD_DARE=[
+"ابعتلي صورة دلوقتي من غير filter! 📸",
+" records صوتي وقول 'بحبك يا [الاسم]' بأحلى صوت 🎙️",
+"غير صورة البروفايل بتاعتك لصورة من اختياري لمدة يوم 🖼️",
+"ابعتلي رسالة صوتية وانت بتغني أغنية حب 🎵",
+"اعمل فيديو قصير وأنت بتبعتلي قلوب 💕",
+"قولاللي 3 حاجات بتحبها فيا في رسالة طويلة 💌",
+"اعمل مكالمة صوتية وقول 'بحبك' بأعلى صوت 📢",
+"ابعتلي screenshot آخر رسالة بعتهاalogy 💬",
+"اكتبلي قصيدة قصيرة عن حبنا ✍️",
+"changed your status to 'بحب [الاسم]' لمدة ساعتين 💝",
+"صورلي your hand وابعتهاalie مع ام eloquent 🤲",
+"اعمللي story على إنستا بحبنا 📱",
+"ابعتلي فيسنت أو boomerang وانت بتبتسم 😄",
+"اكتبلي رسالة حب على ورقة وصورها 📝",
+"اعمل تحدي الأكل الحار وأنا ب看着 🌶️",
+"rename contact بتاعي لـ 'حبيبي Forever' وابعتلي screenshot 📱",
+"اتكلم باللهجة بتاعتي لمدة 5 دقائق 🗣️",
+"اعملle face mask وصوري نفسك 🧖",
+"ابعتلي 5 صور ليكأنت بتبسم 😁",
+"اكتبلي love letter على نوتة وصورها ✒️",
+"صورلي المكان اللي بتحب تفكر فيا فيه 🏠",
+"اعمل live وقول 'بحب [الاسم]' 🎥",
+"ابعتلي playlist الأغاني اللي بتفكرك بيا 🎶",
+"اعمل dinner date في البيت وابعتلي الصور 🍽️",
+" dances ب 30 ثانية وأنا ب看着 💃",
+"changed Bio بتاعك لجملة حب عن علاقتنا 📝",
+"اتصل بيّا وقولاللي something romantic 🌹",
+"ابعتلي screenshot لمحادثتنا الأولى 💭",
+"اعمل marathon مكالمات كل يوم لمدة أسبوع 📞",
+"اكتبلي قائمة ب 10 حاجات بتحبها فيا 📋"
+];
+
+const TOD_PENALTIES=[
+"⭐ ابعت فوتو كار jogging وانت بتضحك 😂",
+"⭐ اعمل 10 تمارين إطالة قدام الكاميرا 🤸",
+"⭐ ابعت voice note وانت بتقول 'أنا غلطان(ة)' 5 مرات 🎙️",
+"⭐ غير اسم الـ contact بتاعي لـ 'الزعيم(ة) 👑' 📱",
+"⭐ اكتب رسالة اعتذار طويلة على ورقة وصورها ✍️",
+"⭐ اعمل dinner date في البيت当晚(ة) الليلة 🍽️",
+"⭐ ابعتلي صورتك وأنت بتنام النهاردة 😴",
+"⭐ تكلمني بطريقة رومانسية لمدة 10 دقائق 🌹",
+"⭐ اعمل 20 jumping jack دلوقتي 🏃",
+"⭐ ابعتلي 3 reasons بتحبني فيها 💌",
+"⭐ اتصل بيّا الحين وقولاللي something cute 📞",
+"⭐ ابعت صورة لأي حاجة بتفكرك بيا 🤔",
+"⭐ اعمل dishes النهاردة وأنا ب看着 🍽️",
+"⭐ ابعتلي voice note بتغني أغنية حب 🎵",
+"⭐ تجاهلني لمدة ساعة وتぶりشني بعدها 😤💕",
+"⭐ ابعتلي screenshot لمحادثتناorning 📱",
+"⭐ اعمل 15 squats دلوقتي 🏋️",
+"⭐ ابعتلي فيديو قصير وأنت بتبعت قلوب 💌",
+"⭐ اتصل بيّا الحين وقول 'بحبك' 3 مرات 📞",
+"⭐ اบعتل prompt يبقى على تويتر 'بحب [الاسم]' 🐦"
+];
+
+let todState={myName:"",myCode:"",isHost:false,hostName:"",joinerName:"",
+round:0,maxRounds:15,chooserIsHost:true,
+currentChoice:null,penalties:0,hostRefusals:0,joinerRefusals:0,
+results:[],roomRef:null};
+
+function todShuffle(a){const s=[...a];for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]]}return s}
+let todTruthPool,todDarePool,todPenaltyPool;
+
+window.todCreateRoom=function(){
+todState.myName=$("todMyName").value.trim();
+if(!todState.myName){$("todMyName").style.borderColor="#ff6b9d";return}
+$("todMyName").style.borderColor="";
+$("todCreateBtn").disabled=true;$("todCreateBtn").innerHTML='<span class="spinner"></span>';
+let code=genCode();todState.roomRef=ref(db,"tod/"+code);
+get(todState.roomRef).then(snap=>{if(snap.exists()){code=genCode();todState.roomRef=ref(db,"tod/"+code)}
+return set(todState.roomRef,{code,hostName:todState.myName,joinerName:"",status:"waiting",round:0,maxRounds:15,
+chooserIsHost:true,currentChoice:null,hostRefusals:0,joinerRefusals:0,results:{},
+truthPool:JSON.stringify(todShuffle(TOD_TRUTH)),darePool:JSON.stringify(todShuffle(TOD_DARE)),penaltyPool:JSON.stringify(todShuffle(TOD_PENALTIES))})
+}).then(()=>{
+todState.myCode=code;todState.isHost=true;todState.hostName=todState.myName;
+$("todCodeText").textContent=code;$("todWaitTitle").textContent="في انتظار شريحتك...";
+$("todWaitInfo").textContent="شارك الكود اللي فوق مع شريحتك عشان يدخل";
+switchTo("todWaitScr");onDisconnect(todState.roomRef).update({status:"disconnected"});
+listen("tod/"+code+"/joinerName",snap=>{const n=snap.val();if(n){$("todStartWrap").style.display="block";$("todBothReady").textContent=n+" دخل(ت) الغرفة! 🎉";$("todWaitInfo").textContent=n+" جاهز(ة)!";$("todStartWrap").querySelector(".btn").textContent="ابدأ اللعب مع "+n+"! 🎉"}});
+listen("tod/"+code+"/status",snap=>{const st=snap.val();if(st==="playing")todInitGame();if(st==="finished")todShowResults()});
+}).catch(()=>{showErr("حصل خطأ");$("todCreateBtn").disabled=false;$("todCreateBtn").textContent="أنشئ غرفة جديدة 🎮"});
+};
+
+window.todJoinRoom=function(){
+todState.myName=$("todMyName").value.trim();const code=$("todCodeIn").value.trim();
+if(!todState.myName){$("todMyName").style.borderColor="#ff6b9d";return}
+if(!code||code.length!==6){$("todCodeIn").style.borderColor="#ff6b9d";return}
+$("todMyName").style.borderColor="";$("todCodeIn").style.borderColor="";
+$("todJoinBtn").disabled=true;$("todJoinBtn").innerHTML='<span class="spinner"></span>';
+todState.roomRef=ref(db,"tod/"+code);
+get(todState.roomRef).then(snap=>{if(!snap.exists())throw new Error("notfound");
+const room=snap.val();if(room.joinerName&&room.joinerName!=="")throw new Error("full");
+return update(todState.roomRef,{joinerName:todState.myName,status:"ready"})
+}).then(()=>{
+todState.myCode=$("todCodeIn").value.trim();todState.isHost=false;todState.joinerName=todState.myName;
+$("todCodeText").textContent=todState.myCode;$("todWaitTitle").textContent="ادخلت الغرفة!";
+$("todWaitInfo").textContent="مستنيين صاحب الغرفة يبدأ...";
+switchTo("todWaitScr");onDisconnect(todState.roomRef).update({status:"disconnected"});
+listen("tod/"+todState.myCode+"/status",snap=>{const st=snap.val();if(st==="playing")todInitGame();if(st==="finished")todShowResults()});
+}).catch(e=>{$("todJoinBtn").disabled=false;$("todJoinBtn").textContent="ادخل الغرفة 🚀";
+if(e.message==="notfound")showErr("الغرفة مش موجودة!");
+else if(e.message==="full")showErr("الغرفة مليانة!");
+else showErr("حصل خطأ")});
+};
+
+$("todCodeIn").addEventListener("keydown",e=>{if(e.key==="Enter")todJoinRoom()});
+$("todMyName").addEventListener("keydown",e=>{if(e.key==="Enter"){if($("todCodeIn").value.trim())todJoinRoom();else todCreateRoom()}});
+window.todCopyCode=function(){navigator.clipboard.writeText(todState.myCode).then(()=>{const b=document.querySelectorAll(".copy-btn")[1];if(b){b.textContent="✅ تم النسخ!";setTimeout(()=>b.textContent="📋 انسخ الكود",2000)}}).catch(()=>{})};
+
+window.todStartGame=function(){
+if(!todState.isHost)return;
+get(todState.roomRef).then(snap=>{const room=snap.val();
+return update(todState.roomRef,{status:"playing",round:1,chooserIsHost:true,hostRefusals:0,joinerRefusals:0,results:{}})
+});
+};
+
+function todInitGame(){
+get(todState.roomRef).then(snap=>{const room=snap.val();
+todState.hostName=room.hostName;todState.joinerName=room.joinerName;
+todState.round=room.round||1;todState.maxRounds=room.maxRounds||15;
+todState.chooserIsHost=room.chooserIsHost!==false;
+todState.hostRefusals=room.hostRefusals||0;todState.joinerRefusals=room.joinerRefusals||0;
+todState.results=room.results||{};
+todTruthPool=JSON.parse(room.truthPool||"[]");
+todDarePool=JSON.parse(room.darePool||"[]");
+todPenaltyPool=JSON.parse(room.penaltyPool||"[]");
+todShowTurn();switchTo("todGameScr");
+listen("tod/"+todState.myCode+"/round",snap=>{const r=snap.val();if(r){todState.round=r;todState.chooserIsHost=true;todShowTurn()}});
+listen("tod/"+todState.myCode+"/status",snap=>{if(snap.val()==="finished")todShowResults()});
+});
+}
+
+function todShowTurn(){
+const isMyTurn=todState.chooserIsHost===todState.isHost;
+const chooser=todState.chooserIsHost?todState.hostName:todState.joinerName;
+const target=todState.chooserIsHost?todState.joinerName:todState.hostName;
+$("todRoundTxt").textContent="الجولة "+todState.round+" من "+todState.maxRounds;
+$("todProgFill").style.width=((todState.round-1)/todState.maxRounds*100)+"%";
+$("todScoreLive").textContent="💛 "+todState.hostRefusals+" - "+todState.joinerRefusals;
+$("todPhase1").style.display="block";$("todPhase2").style.display="none";$("todPhase3").style.display="none";
+$("todChooserName").textContent=chooser+" يختار(ة)";
+$("todTargetName").textContent=target;
+
+const c=$("todCard");c.style.animation="none";c.offsetHeight;c.style.animation="scaleIn .35s ease-out";
+
+if(!isMyTurn){
+$("todPhase1").querySelectorAll(".tod-btn").forEach(b=>{b.disabled=true;b.style.opacity=".4"});
+$("todChooserName").textContent="⏳ في انتظار "+chooser+" يختار...";
+}else{
+$("todPhase1").querySelectorAll(".tod-btn").forEach(b=>{b.disabled=false;b.style.opacity="1"});
+}
+}
+
+window.todChoose=function(choice){
+todState.currentChoice=choice;
+const target=todState.chooserIsHost?todState.joinerName:todState.hostName;
+const pool=choice==="truth"?todTruthPool:todDarePool;
+const q=pool.length>0?pool[Math.floor(Math.random()*pool.length)]:"مفيش سؤال متبقى!";
+
+$("todPhase1").style.display="none";
+$("todPhase2").style.display="block";
+$("todTypeBadge").textContent=choice==="truth"?"صراحة 🟢":"تحدي 🔴";
+$("todTypeBadge").className="tod-type-badge "+(choice==="truth"?"truth-badge":"dare-badge");
+$("todQuestion").textContent=q;
+
+const isTargetMyTurn=!todState.chooserIsHost===todState.isHost||(!todState.chooserIsHost&&todState.isHost);
+const amTarget=(todState.chooserIsHost&&!todState.isHost)||(!todState.chooserIsHost&&todState.isHost);
+
+if(amTarget){
+$("todAnswerBtns").style.display="flex";
+$("todTimer").textContent="轮到ك! اختار نجحت ولا رفضت";
+}else{
+$("todAnswerBtns").style.display="none";
+$("todTimer").textContent="⏳ مستنيين "+target+" يرد...";
+}
+
+todState.results[todState.round]={choice,question:q};
+};
+
+window.todAccept=function(){
+todState.results[todState.round].accepted=true;
+todState.results[todState.round].player=todState.isHost?"h":"j";
+update(todState.roomRef,{results:todState.results});
+todFinishRound(true);
+};
+
+window.todRefuse=function(){
+const isHostPlayer=todState.isHost;
+if(isHostPlayer)todState.hostRefusals++;else todState.joinerRefusals++;
+todState.results[todState.round].accepted=false;
+todState.results[todState.round].refusedBy=todState.isHost?"h":"j";
+
+const penalty=todPenaltyPool.length>0?todPenaltyPool[Math.floor(Math.random()*todPenaltyPool.length)]:"قول 'بحبك' 5 مرات! 💕";
+$("todPhase2").style.display="none";
+$("todPhase3").style.display="block";
+$("todPenalty").textContent=penalty;
+$("todScoreLive").textContent="💛 "+todState.hostRefusals+" - "+todState.joinerRefusals;
+
+update(todState.roomRef,{hostRefusals:todState.hostRefusals,joinerRefusals:todState.joinerRefusals,results:todState.results});
+};
+
+window.todNextTurn=function(){
+const nextRound=todState.round+1;
+if(nextRound>todState.maxRounds){
+update(todState.roomRef,{status:"finished"});
+return;
+}
+const nextChooser=!todState.chooserIsHost;
+update(todState.roomRef,{round:nextRound,chooserIsHost:nextChooser});
+todState.round=nextRound;todState.chooserIsHost=nextChooser;todShowTurn();
+};
+
+function todShowResults(){
+get(todState.roomRef).then(snap=>{const room=snap.val();
+const hN=room.hostName,jN=room.joinerName;
+const hRef=room.hostRefusals||0,jRef=room.joinerRefusals||0;
+todState.hostRefusals=hRef;todState.joinerRefusals=jRef;
+
+$("todRHN").textContent=hN;$("todRJN").textContent=jN;
+$("todRHS").textContent=hRef;$("todRJS").textContent=jRef;
+
+let msg="";
+if(hRef===jRef)msg='<span class="hl">'+hN+'</span> و<span class="hl">'+jN+'</span> شجاعين بالizontally! 💪 محدش رفض! 🎉';
+else if(hRef===0)msg='<span class="hl">'+hN+'</span> شجاع(ة) جداً! ما رفضش أي تحدي! 🏆('+jN+' رفض '+jRef+' مرة)';
+else if(jRef===0)msg='<span class="hl">'+jN+'</span> شجاع(ة) جداً! ما رفضتش أي تحدي! 🏆('+hN+' رفض '+hRef+' مرة)';
+else{const braver=hRef<jRef?hN:jN;msg='<span class="hl">'+braver+'</span> أشجع! رفض أقل مرات 💪';}
+$("todResMsg").innerHTML=msg;
+
+const hist=$("todResHistory");hist.innerHTML='<h3 style="font-size:15px;color:var(--rose-light);margin-bottom:10px;font-weight:700;text-align:center">تفاصيل الجولات 📋</h3>';
+const results=room.results||{};
+Object.keys(results).forEach(k=>{
+const r=results[k];if(!r)return;
+const icon=r.choice==="truth"?"🟢":"🔴";
+const type=r.choice==="truth"?"صراحة":"تحدي";
+const status=r.accepted===true?'<span style="color:#68d391">✅ نجح</span>':r.accepted===false?'<span style="color:#fc8181">❌ رفض</span>':'';
+hist.innerHTML+='<div class="ri" style="margin-bottom:6px"><span class="rq">'+icon+' '+type+': '+r.question+'</span>'+status+'</div>';
+});
+
+switchTo("todResScr");createConfetti()});
+}
+
+window.todPlayAgain=function(){
+update(todState.roomRef,{status:"waiting",round:0,chooserIsHost:true,hostRefusals:0,joinerRefusals:0,results:{},
+truthPool:JSON.stringify(todShuffle(TOD_TRUTH)),darePool:JSON.stringify(todShuffle(TOD_DARE)),penaltyPool:JSON.stringify(todShuffle(TOD_PENALTIES))})
+.then(()=>{
+todState.round=0;todState.hostRefusals=0;todState.joinerRefusals=0;todState.results={};
+$("todStartWrap").style.display=todState.isHost?"block":"none";
+$("todWaitTitle").textContent="جاهزين لجولة جديدة!";switchTo("todWaitScr");
+});
+};
+
+window.todShareRes=function(){
+const txt="💌 صراحة ولا تحدي؟ 💌\n💪 "+$("todRHN").textContent+": رفض "+$("todRHS").textContent+" | "+$("todRJN").textContent+": رفض "+$("todRJS").textContent+"\n💎 لعبنا "+todState.maxRounds+" جولة\nشُروقَتي ♡";
+if(navigator.share)navigator.share({text:txt}).catch(()=>{});
+else if(navigator.clipboard)navigator.clipboard.writeText(txt).then(()=>showErr("تم النسخ! ✅")).catch(()=>prompt("انسخ:",txt));
+else prompt("انسخ:",txt);
+};
 
 window.createRoom=function(){
 myName=$("myName").value.trim();

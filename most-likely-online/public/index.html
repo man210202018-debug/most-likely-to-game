@@ -153,6 +153,30 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(197,48,48,.95);backdrop-filter:blur(10px);color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:600;z-index:9999;transition:transform .4s;max-width:90%;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
+/* ===== HOME SCREEN ===== */
+.home-screen{justify-content:center;padding-top:40px;padding-bottom:40px}
+.home-header{text-align:center;margin-bottom:30px}
+.games-grid{width:100%;max-width:460px;display:flex;flex-direction:column;gap:16px}
+.game-card{background:var(--glass-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px;padding:24px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .35s ease;position:relative;overflow:hidden}
+.game-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,rgba(183,110,121,.05),rgba(107,63,160,.05));opacity:0;transition:opacity .35s}
+.game-card:hover::before,.game-card:active::before{opacity:1}
+.game-card:hover{border-color:rgba(183,110,121,.3);transform:translateY(-3px);box-shadow:0 8px 30px rgba(183,110,121,.15)}
+.game-card:active{transform:translateY(0) scale(.98)}
+.game-card-icon{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;position:relative;z-index:1}
+.game-card-icon.rose-bg{background:linear-gradient(135deg,rgba(183,110,121,.2),rgba(183,110,121,.08));border:1px solid rgba(183,110,121,.2)}
+.game-card-icon.purple-bg{background:linear-gradient(135deg,rgba(107,63,160,.2),rgba(107,63,160,.08));border:1px solid rgba(107,63,160,.2)}
+.game-card-icon.gold-bg{background:linear-gradient(135deg,rgba(240,194,127,.2),rgba(240,194,127,.08));border:1px solid rgba(240,194,127,.2)}
+.game-card-info{flex:1;position:relative;z-index:1}
+.game-card-title{font-size:17px;font-weight:800;color:var(--text-primary);margin-bottom:4px}
+.game-card-desc{font-size:12px;color:var(--text-secondary);line-height:1.5}
+.game-card-arrow{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;color:var(--rose-light);font-size:14px;flex-shrink:0;transition:all .3s;position:relative;z-index:1}
+.game-card:hover .game-card-arrow{background:rgba(183,110,121,.15);transform:translateX(-3px)}
+.game-card-coming{opacity:.35;pointer-events:none}
+.game-card-coming .game-card-badge{display:inline-block;padding:3px 8px;border-radius:6px;background:rgba(240,194,127,.15);color:var(--accent-gold);font-size:10px;font-weight:700;margin-top:6px}
+
+.back-btn{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;color:var(--text-secondary);font-size:16px;z-index:10}
+.back-btn:hover{background:rgba(255,255,255,.1);color:var(--text-primary)}
+
 .footer-brand{text-align:center;margin-top:20px;opacity:.3;font-size:11px;color:var(--rose-light);letter-spacing:1px}
 
 @media(max-width:500px){
@@ -175,18 +199,55 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 <div class="cbox" id="cbox"></div>
 <div class="toast" id="toast"></div>
 
-<!-- LOBBY -->
-<div class="screen active" id="lobbyScr">
+<!-- HOME -->
+<div class="screen active home-screen" id="homeScr">
+<div class="home-header">
+  <div class="name-decoration" style="padding:20px 30px;margin-bottom:10px">
+    <div class="name-ornament-top">✦ ✦ ✦</div>
+    <div class="shuruq-name" style="font-size:42px">شروقتي</div>
+    <div class="name-ornament-bottom">✦ ✦ ✦</div>
+    <div class="name-sub">C O U P L E S &nbsp; G A M E S</div>
+  </div>
+  <p style="color:var(--text-secondary);font-size:14px;margin-top:8px">اختار لعبة و العب مع شريحتك 💕</p>
+</div>
+<div class="games-grid">
+  <div class="game-card" onclick="goToLobby()">
+    <div class="game-card-icon rose-bg">💘</div>
+    <div class="game-card-info">
+      <div class="game-card-title">مين أكتر واحد فينا؟</div>
+      <div class="game-card-desc">30 سؤال ممتع، صوّتوا واعرفوا مين الأكتر</div>
+    </div>
+    <div class="game-card-arrow">←</div>
+  </div>
+  <div class="game-card game-card-coming">
+    <div class="game-card-icon purple-bg">🧩</div>
+    <div class="game-card-info">
+      <div class="game-card-title">لعبني تعرفني</div>
+      <div class="game-card-desc">اختبروا معلوماتكم عن بعض</div>
+      <div class="game-card-badge">قريباً ✨</div>
+    </div>
+    <div class="game-card-arrow">←</div>
+  </div>
+  <div class="game-card game-card-coming">
+    <div class="game-card-icon gold-bg">💌</div>
+    <div class="game-card-info">
+      <div class="game-card-title">Truth or Dare</div>
+      <div class="game-card-desc">اختاروا بين الحقيقة أو التحدي</div>
+      <div class="game-card-badge">قريباً ✨</div>
+    </div>
+    <div class="game-card-arrow">←</div>
+  </div>
+</div>
+</div>
+
+<!-- LOBBY (Most Likely To) -->
+<div class="screen" id="lobbyScr">
+<div class="back-btn" onclick="goHome()">→</div>
 <div class="glass" style="max-width:460px;width:100%">
   <div class="card-body">
-    <div class="name-decoration">
-      <div class="name-ornament-top">✦ ✦ ✦</div>
-      <div class="shuruq-name">شروقتي</div>
-      <div class="name-ornament-bottom">✦ ✦ ✦</div>
-      <div class="name-sub">M O S T &nbsp; L I K E L Y &nbsp; T O</div>
-    </div>
+    <span class="emoji-big">💘</span>
     <h1 class="title">مين أكتر واحد فينا؟</h1>
-    <p class="subtitle">العب أونلاين مع شريحتك!<br>اتصلوا ببعض واعرفوا مين الأكتر</p>
+    <p class="subtitle">العب أونلاين مع شريحتك!</p>
     <div class="input-g"><label>اسمك أنت 💫</label><input type="text" id="myName" placeholder="مثلاً: سارة" maxlength="20"></div>
     <button class="btn" id="createBtn" onclick="createRoom()">أنشئ غرفة جديدة 🎮</button>
     <div class="divider">أو</div>
@@ -313,6 +374,9 @@ function showErr(m){const t=$("toast");t.textContent=m;t.classList.add("show");s
 function switchTo(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");window.scrollTo(0,0)}
 function genCode(){return Math.floor(100000+Math.random()*900000).toString()}
 function listen(path,cb){const r=ref(db,path);onValue(r,cb);myListeners.push(r)}
+
+window.goToLobby=function(){switchTo("lobbyScr")};
+window.goHome=function(){switchTo("homeScr")};
 
 window.createRoom=function(){
 myName=$("myName").value.trim();

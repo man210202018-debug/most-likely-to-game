@@ -97,11 +97,15 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .q-tx{font-size:19px;font-weight:800;line-height:1.7;color:var(--text-primary)}
 
 .vote-btns{display:flex;gap:12px;margin-top:22px;width:100%}
+.vote-btns-n{margin-top:10px}
+.vote-btns-n .v-btn{padding:12px 8px;font-size:13px}
 .v-btn{flex:1;padding:16px 8px;border:1.5px solid;border-radius:14px;background:transparent;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .3s;overflow:hidden}
 .v-btn.p1{border-color:rgba(183,110,121,.4);color:var(--rose-light)}
 .v-btn.p1:hover,.v-btn.p1.sel{background:rgba(183,110,121,.12);border-color:var(--rose-light);transform:translateY(-2px);box-shadow:0 4px 20px rgba(183,110,121,.25)}
 .v-btn.p2{border-color:rgba(107,63,160,.4);color:#a78bfa}
 .v-btn.p2:hover,.v-btn.p2.sel{background:rgba(107,63,160,.12);border-color:#a78bfa;transform:translateY(-2px);box-shadow:0 4px 20px rgba(107,63,160,.25)}
+.v-btn.p0{border-color:rgba(240,194,127,.4);color:var(--accent-gold)}
+.v-btn.p0:hover,.v-btn.p0.sel{background:rgba(240,194,127,.12);border-color:var(--accent-gold);transform:translateY(-2px);box-shadow:0 4px 20px rgba(240,194,127,.25)}
 .v-btn:active{transform:translateY(0) scale(.97)}
 .v-btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important;box-shadow:none!important}
 .v-btn .b-em{display:block;font-size:24px;margin-bottom:3px}
@@ -329,6 +333,9 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   <div class="vote-btns">
     <button class="v-btn p1" id="vBtn1" onclick="castVote(1)"><span class="b-em">🙋</span><span id="lbl1">...</span></button>
     <button class="v-btn p2" id="vBtn2" onclick="castVote(2)"><span class="b-em">🙋</span><span id="lbl2">...</span></button>
+  </div>
+  <div class="vote-btns vote-btns-n">
+    <button class="v-btn p0" id="vBtn3" onclick="castVote(3)"><span class="b-em">🚫</span><span>محدش فينا</span></button>
   </div>
   <div class="v-stat" id="vStat"></div>
   <div id="vReveal"></div>
@@ -1511,31 +1518,36 @@ $("qTx").textContent=q.q;$("progTxt").textContent=(idx+1)+" / "+totalQ;
 $("progFill").style.width=((idx)/totalQ*100)+"%";
 $("vStat").textContent="";$("vStat").className="v-stat";$("vReveal").innerHTML="";
 $("skipBtn").style.display="block";$("nextWrap").className="next-wrap";
-$("vBtn1").className="v-btn p1";$("vBtn2").className="v-btn p2";
-$("vBtn1").disabled=false;$("vBtn2").disabled=false;
+$("vBtn1").className="v-btn p1";$("vBtn2").className="v-btn p2";$("vBtn3").className="v-btn p0";
+$("vBtn1").disabled=false;$("vBtn2").disabled=false;$("vBtn3").disabled=false;
 if(!isHost)$("nextWrap").style.display="none";
 const c=$("qCard");c.style.animation="none";c.offsetHeight;c.style.animation="scaleIn .35s ease-out"}
 
 function checkBothVoted(){get(roomRef).then(snap=>{const room=snap.val();const hv=room.hv,jv=room.jv;
 if(hv===null||jv===null||hv===undefined||jv===undefined)return;
-$("vBtn1").disabled=true;$("vBtn2").disabled=true;$("skipBtn").style.display="none";
+$("vBtn1").disabled=true;$("vBtn2").disabled=true;$("vBtn3").disabled=true;$("skipBtn").style.display="none";
 const rv=$("vReveal");
-if(hv!=="skip"&&jv!=="skip"&&hv===jv){const n=hv===1?room.hostName:room.joinerName;rv.innerHTML='<div class="v-reveal agree"><p>أنتما اتفقتوا! 💕<br><strong>'+n+'</strong> هو(ي) الأكتر واحد</p></div>'}
+const nameOf=function(v){return v===1?room.hostName:v===2?room.joinerName:null};
+if(hv!=="skip"&&jv!=="skip"&&hv===jv){
+if(hv===3)rv.innerHTML='<div class="v-reveal agree"><p>اتفقتم! 💕<br><strong>محدش فينا</strong> هو الأجوبة</p></div>';
+else{const n=nameOf(hv);rv.innerHTML='<div class="v-reveal agree"><p>أنتما اتفقتوا! 💕<br><strong>'+n+'</strong> هو(ي) الأكتر واحد</p></div>'}
+}
 else if(hv==="skip"&&jv==="skip")rv.innerHTML='<div class="v-reveal disagree"><p>الاتنين خطّتوا! 😅</p></div>';
 else if(hv==="skip"||jv==="skip"){const sk=hv==="skip"?room.hostName:room.joinerName;const vt=hv==="skip"?room.joinerName:room.hostName;rv.innerHTML='<div class="v-reveal disagree"><p>'+sk+' خطّط... '+vt+' بصّت! 🤔</p></div>'}
-else rv.innerHTML='<div class="v-reveal disagree"><p>مختلفين! 🤔<br>'+room.hostName+' اختار(ت) نفسه/ها... '+room.joinerName+' اختار(ت) نفسه/ها!</p></div>';
+else if(hv===3||jv===3){const who=hv===3?room.hostName:room.joinerName;const whom=hv===3?room.joinerName:room.hostName;const n=nameOf(hv===3?jv:hv);rv.innerHTML='<div class="v-reveal disagree"><p>مختلفين! 🤔<br>'+who+' قال محدش فينا... '+whom+' اختار(ت) '+n+'</p></div>'}
+else if(hv!==jv)rv.innerHTML='<div class="v-reveal disagree"><p>مختلفين! 🤔<br>'+room.hostName+' اختار(ت) '+nameOf(hv)+'... '+room.joinerName+' اختار(ت) '+nameOf(jv)+'</p></div>';
 $("vStat").textContent="الاتنين بصّتوا! 🎉";$("vStat").className="v-stat show";createSparkles();
 if(isHost){$("nextWrap").className="next-wrap show";if(curQ+1>=totalQ)$("nextBtnTxt").textContent="عرض النتيجة 🏆"}})}
 
 window.castVote=function(v){if(hasVoted)return;hasVoted=true;
 update(roomRef,{[isHost?"hv":"jv"]:v});
-const btn=v===1?$("vBtn1"):$("vBtn2");btn.classList.add("sel");
-$("vBtn1").disabled=true;$("vBtn2").disabled=true;$("skipBtn").style.display="none";
+const btn=v===1?$("vBtn1"):v===2?$("vBtn2"):$("vBtn3");btn.classList.add("sel");
+$("vBtn1").disabled=true;$("vBtn2").disabled=true;$("vBtn3").disabled=true;$("skipBtn").style.display="none";
 $("vStat").textContent="تم التصويت! مستنيين الشريك... ⏳";$("vStat").className="v-stat show"};
 
 window.skipQ=function(){if(hasVoted)return;hasVoted=true;
 update(roomRef,{[isHost?"hv":"jv"]:"skip"});
-$("vBtn1").disabled=true;$("vBtn2").disabled=true;$("skipBtn").style.display="none";
+$("vBtn1").disabled=true;$("vBtn2").disabled=true;$("vBtn3").disabled=true;$("skipBtn").style.display="none";
 $("vStat").textContent="تخطيت السؤال! ⏭️";$("vStat").className="v-stat show"};
 
 window.nextQ=function(){get(roomRef).then(snap=>{const room=snap.val();const nq=room.currentQ+1;const h=room.history||{};h[curQ]={hv:room.hv,jv:room.jv};
@@ -1552,16 +1564,16 @@ else{const top=s.h>s.j?hN:jN;msg='<span class="hl">'+top+'</span> عنده(ا) '
 $("resMsg").innerHTML=msg;
 const te=$("titlesS");te.innerHTML='<h3>ملخص الألقاب 🏅</h3>';let bc=0;
 qs.forEach((q,i)=>{const h=history[i];if(!h)return;
-if(h.hv!==undefined&&h.hv!=="skip"&&h.hv!==null){te.innerHTML+='<span class="t-badge hb">'+hN+': '+q.q.replace('مين أكتر واحد فينا','')+'</span>';bc++}
-if(h.jv!==undefined&&h.jv!=="skip"&&h.jv!==null&&h.hv!==h.jv){te.innerHTML+='<span class="t-badge jb">'+jN+': '+q.q.replace('مين أكتر واحد فينا','')+'</span>';bc++}});
+if(h.hv!==undefined&&h.hv!=="skip"&&h.hv!==null&&h.hv!==3){te.innerHTML+='<span class="t-badge hb">'+hN+': '+q.q.replace('مين أكتر واحد فينا','')+'</span>';bc++}
+if(h.jv!==undefined&&h.jv!=="skip"&&h.jv!==null&&h.jv!==3&&h.hv!==h.jv){te.innerHTML+='<span class="t-badge jb">'+jN+': '+q.q.replace('مين أكتر واحد فينا','')+'</span>';bc++}});
 if(bc===0)te.innerHTML="";
 const d=$("detRes");d.innerHTML='<h3>تفاصيل كل سؤال 📋</h3>';
 qs.forEach((q,i)=>{const h=history[i];let b="";
 if(!h)b='<span class="rb skip">⏭️ لم يُلعَب</span>';
 else if(h.hv==="skip"&&h.jv==="skip")b='<span class="rb skip">⏭️ تم التخطي</span>';
 else if(h.hv==="skip"||h.jv==="skip"||h.hv===undefined||h.jv===undefined)b='<span class="rb skip">⏭️ لم يُصوَّت بالكامل</span>';
-else if(h.hv===h.jv){const n=h.hv===1?hN:jN;b='<span class="rb both">🤝 '+n+'</span>'}
-else b='<span class="rb hb">'+hN+'</span> <span class="rb jb">'+jN+'</span>';
+else if(h.hv===h.jv){const n=h.hv===3?'محدش فينا':(h.hv===1?hN:jN);b='<span class="rb both">🤝 '+n+'</span>'}
+else b='<span class="rb hb">'+(h.hv===3?'محدش فينا':hN)+'</span> <span class="rb jb">'+(h.jv===3?'محدش فينا':jN)+'</span>';
 d.innerHTML+='<div class="ri"><span class="rq">'+q.e+' '+q.q+'</span>'+b+'</div>'});
 switchTo("resScr");createConfetti()})}
 

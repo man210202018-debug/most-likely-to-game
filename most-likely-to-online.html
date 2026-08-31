@@ -438,7 +438,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     <div class="tod-type-badge" id="todTypeBadge">صراحة 🟢</div>
     <div class="tod-question" id="todQuestion"></div>
     <div class="tod-timer" id="todTimer"></div>
-    <div class="tod-answer-btns">
+    <div class="tod-answer-btns" id="todAnswerBtns" style="display:none">
       <button class="btn" style="background:linear-gradient(135deg,#48bb78,#38a169)" onclick="todAccept()">نجحت! ✅</button>
       <button class="btn btn-o" style="border-color:rgba(245,101,101,.4);color:#fc8181" onclick="todRefuse()">رفضت! 😱</button>
     </div>
@@ -464,8 +464,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     <span class="emoji-big">🏆</span>
     <h1 class="title">خلصنا!</h1>
     <div class="tod-scores">
-      <div class="tod-score-box h"><div class="tsn" id="todRHN">...</div><div class="tsv" id="todRHS">0</div><div class="tsn">ulls</div></div>
-      <div class="tod-score-box j"><div class="tsn" id="todRJN">...</div><div class="tsv" id="todRJS">0</div><div class="tsn">ulls</div></div>
+      <div class="tod-score-box h"><div class="tsn" id="todRHN">...</div><div class="tsv" id="todRHS">0</div><div class="tsn">مرات رفض</div></div>
+      <div class="tod-score-box j"><div class="tsn" id="todRJN">...</div><div class="tsv" id="todRJS">0</div><div class="tsn">مرات رفض</div></div>
     </div>
     <div class="res-msg" id="todResMsg"></div>
     <div id="todResHistory" style="width:100%;text-align:right;margin-bottom:20px"></div>
@@ -693,7 +693,8 @@ todTruthPool=JSON.parse(room.truthPool||"[]");
 todDarePool=JSON.parse(room.darePool||"[]");
 todPenaltyPool=JSON.parse(room.penaltyPool||"[]");
 todShowTurn();switchTo("todGameScr");
-listen("tod/"+todState.myCode+"/round",snap=>{const r=snap.val();if(r){todState.round=r;todState.chooserIsHost=true;todShowTurn()}});
+listen("tod/"+todState.myCode+"/round",snap=>{const r=snap.val();if(r){todState.round=r;todShowTurn()}});
+listen("tod/"+todState.myCode+"/chooserIsHost",snap=>{const v=snap.val();if(v!==null&&v!==undefined){todState.chooserIsHost=v;todShowTurn()}});
 listen("tod/"+todState.myCode+"/status",snap=>{if(snap.val()==="finished")todShowResults()});
 });
 }
@@ -725,32 +726,37 @@ const target=todState.chooserIsHost?todState.joinerName:todState.hostName;
 const pool=choice==="truth"?todTruthPool:todDarePool;
 const q=pool.length>0?pool[Math.floor(Math.random()*pool.length)]:"مفيش سؤال متبقى!";
 
+todState.results[todState.round]={choice,question:q};
+
 $("todPhase1").style.display="none";
 $("todPhase2").style.display="block";
 $("todTypeBadge").textContent=choice==="truth"?"صراحة 🟢":"تحدي 🔴";
 $("todTypeBadge").className="tod-type-badge "+(choice==="truth"?"truth-badge":"dare-badge");
 $("todQuestion").textContent=q;
 
-const isTargetMyTurn=!todState.chooserIsHost===todState.isHost||(!todState.chooserIsHost&&todState.isHost);
 const amTarget=(todState.chooserIsHost&&!todState.isHost)||(!todState.chooserIsHost&&todState.isHost);
-
 if(amTarget){
 $("todAnswerBtns").style.display="flex";
-$("todTimer").textContent="轮到ك! اختار نجحت ولا رفضت";
+$("todTimer").textContent="🔔 دورك! شريحتك اختارتلك: "+(choice==="truth"?"صراحة 🟢":"تحدي 🔴");
 }else{
 $("todAnswerBtns").style.display="none";
 $("todTimer").textContent="⏳ مستنيين "+target+" يرد...";
 }
-
-todState.results[todState.round]={choice,question:q};
 };
 
 window.todAccept=function(){
-todState.results[todState.round].accepted=true;
-todState.results[todState.round].player=todState.isHost?"h":"j";
+const h=todState.results[todState.round]||{};
+todState.results[todState.round]={choice:h.choice,question:h.question,accepted:true,player:todState.isHost?"h":"j"};
 update(todState.roomRef,{results:todState.results});
-todFinishRound(true);
+todNextTurnFromAccept();
 };
+
+function todNextTurnFromAccept(){
+$("todPhase2").style.display="none";
+$("todPhase3").style.display="block";
+$("todPenalty").textContent="ما شاء الله! نجح(ت) بجدارة! 🎉";
+window.todNextTurn();
+}
 
 window.todRefuse=function(){
 const isHostPlayer=todState.isHost;

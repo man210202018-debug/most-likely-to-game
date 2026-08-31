@@ -1097,7 +1097,7 @@ const Qs=[
 
 function shuffle(a){const s=[...a];for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]]}return s}
 const PLAY_ROUND=15;
-function pickRoundQs(){return shuffle(Qs).slice(0,PLAY_ROUND)}
+function pickRoundQs(exclude){let pool=Qs;if(exclude&&exclude.length){const ex=new Set(exclude.map(q=>q.q));pool=Qs.filter(q=>!ex.has(q.q));if(pool.length<PLAY_ROUND)pool=Qs;}return shuffle(pool).slice(0,PLAY_ROUND)}
 const $=id=>document.getElementById(id);
 let myName="",myCode="",myNum=0,isHost=false,totalQ=30,curQ=0,hasVoted=false,allQs=[],scores={h:0,j:0};
 let roomRef=null,myListeners=[];
@@ -1470,7 +1470,7 @@ $("codeText").textContent=code;$("waitTitle").textContent="في انتظار ش�
 $("waitInfo").textContent="شارك الكود اللي فوق مع شريحتك عشان يدخل";
 switchTo("waitScr");onDisconnect(roomRef).update({status:"disconnected"});
 listen("rooms/"+code+"/joinerName",snap=>{const n=snap.val();if(n){$("startWrap").style.display="block";$("bothReady").textContent=n+" دخل(ت) الغرفة! 🎉";$("waitInfo").textContent=n+" جاهز(ة) اللعب!";$("startWrap").querySelector(".btn").textContent="ابدأ اللعب مع "+n+"! 🎉"}});
-listen("rooms/"+code+"/status",snap=>{const st=snap.val();if(st==="playing")initGame();if(st==="finished")showResults()});
+listen("rooms/"+code+"/status",snap=>{const st=snap.val();if(st==="playing")initGame();if(st==="finished")showResults();if(st==="waiting")onReplay()});
 }).catch(()=>{showErr("حصل خطأ، جرب تاني");$("createBtn").disabled=false;$("createBtn").textContent="أنشئ غرفة جديدة 🎮"});
 };
 
@@ -1489,7 +1489,7 @@ myCode=$("codeIn").value.trim();myNum=2;isHost=false;
 $("codeText").textContent=myCode;$("waitTitle").textContent="ادخلت الغرفة!";
 $("waitInfo").textContent="مستنيين صاحب الغرفة يبدأ اللعبة...";
 switchTo("waitScr");onDisconnect(roomRef).update({status:"disconnected"});
-listen("rooms/"+myCode+"/status",snap=>{const st=snap.val();if(st==="playing")initGame();if(st==="finished")showResults()});
+listen("rooms/"+myCode+"/status",snap=>{const st=snap.val();if(st==="playing")initGame();if(st==="finished")showResults();if(st==="waiting")onReplay()});
 }).catch(e=>{$("joinBtn").disabled=false;$("joinBtn").textContent="ادخل الغرفة 🚀";
 if(e.message==="notfound")showErr("الغرفة مش موجودة!");
 else if(e.message==="full")showErr("الغرفة مليانة!");
@@ -1577,9 +1577,12 @@ else b='<span class="rb hb">'+(h.hv===3?'محدش فينا':hN)+'</span> <span c
 d.innerHTML+='<div class="ri"><span class="rq">'+q.e+' '+q.q+'</span>'+b+'</div>'});
 switchTo("resScr");createConfetti()})}
 
-window.playAgain=function(){get(roomRef).then(snap=>{return update(snap.ref,{status:"waiting",questions:JSON.stringify(pickRoundQs()),totalQ:PLAY_ROUND,currentQ:0,history:{},scores:{h:0,j:0},hv:null,jv:null})
+window.playAgain=function(){get(roomRef).then(snap=>{const oldQs=JSON.parse(snap.val().questions||"[]");return update(snap.ref,{status:"waiting",questions:JSON.stringify(pickRoundQs(oldQs)),totalQ:PLAY_ROUND,currentQ:0,history:{},scores:{h:0,j:0},hv:null,jv:null})
 }).then(()=>{scores={h:0,j:0};hasVoted=false;curQ=0;prevQ=-1;$("startWrap").style.display=isHost?"block":"none";
 $("waitTitle").textContent="جاهزين لجولة جديدة!";$("waitInfo").textContent="اضغط ابدأ لما تكونوا جاهزين";switchTo("waitScr")})};
+
+function onReplay(){scores={h:0,j:0};hasVoted=false;curQ=0;prevQ=-1;$("startWrap").style.display=isHost?"block":"none";
+$("waitTitle").textContent="جاهزين لجولة جديدة!";$("waitInfo").textContent=isHost?"اضغط ابدأ لما تكونوا جاهزين":"مستنيين صاحب الغرفة يبدأ...";switchTo("waitScr")}
 
 window.shareRes=function(){const hN=$("rHN").textContent,jN=$("rJN").textContent;
 const txt="💕 مين أكتر واحد فينا؟ 💕\n📊 "+hN+": "+$("rHS").textContent+" | "+jN+": "+$("rJS").textContent+"\n💎 لعبنا "+totalQ+" سؤال\nشروقتي ♡";

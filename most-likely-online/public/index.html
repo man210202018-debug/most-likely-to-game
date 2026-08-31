@@ -445,11 +445,11 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   </div>
   <!-- PHASE 3: Penalty -->
   <div id="todPhase3" style="display:none">
-    <div class="penalty-card">
+    <div class="penalty-card" id="todPhase3Inner">
       <div class="penalty-title">⭐ عقوبة!</div>
       <div class="penalty-text" id="todPenalty"></div>
     </div>
-    <button class="btn" style="margin-top:16px" onclick="todNextTurn()">الجولة التالية ←</button>
+    <button class="btn" id="todNextTurnBtn" style="margin-top:16px" onclick="todNextTurn()">الجولة التالية ←</button>
   </div>
 </div>
 </div>
@@ -618,13 +618,13 @@ const TOD_PENALTIES=[
 "⭐ اعمل 15 squats دلوقتي 🏋️",
 "⭐ ابعتلي فيديو قصير وأنت بتبعت قلوب 💌",
 "⭐ اتصل بيّا الحين وقول 'بحبك' 3 مرات 📞",
-"⭐ اบعتل prompt يبقى على تويتر 'بحب [الاسم]' 🐦"
+"⭐ ابعتل prompt يبقى على تويتر 'بحب [الاسم]' 🐦"
 ];
 
 let todState={myName:"",myCode:"",isHost:false,hostName:"",joinerName:"",
 round:0,maxRounds:15,chooserIsHost:true,
 currentChoice:null,penalties:0,hostRefusals:0,joinerRefusals:0,
-results:[],roomRef:null};
+results:{},roomRef:null};
 
 function todShuffle(a){const s=[...a];for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]]}return s}
 let todTruthPool,todDarePool,todPenaltyPool;
@@ -695,6 +695,7 @@ todPenaltyPool=JSON.parse(room.penaltyPool||"[]");
 todShowTurn();switchTo("todGameScr");
 listen("tod/"+todState.myCode+"/round",snap=>{const r=snap.val();if(r){todState.round=r;todShowTurn()}});
 listen("tod/"+todState.myCode+"/chooserIsHost",snap=>{const v=snap.val();if(v!==null&&v!==undefined){todState.chooserIsHost=v;todShowTurn()}});
+listen("tod/"+todState.myCode+"/currentPick",snap=>{const p=snap.val();if(p&&p.choice)todShowPick(p)});
 listen("tod/"+todState.myCode+"/status",snap=>{if(snap.val()==="finished")todShowResults()});
 });
 }
@@ -707,6 +708,7 @@ $("todRoundTxt").textContent="الجولة "+todState.round+" من "+todState.ma
 $("todProgFill").style.width=((todState.round-1)/todState.maxRounds*100)+"%";
 $("todScoreLive").textContent="💛 "+todState.hostRefusals+" - "+todState.joinerRefusals;
 $("todPhase1").style.display="block";$("todPhase2").style.display="none";$("todPhase3").style.display="none";
+$("todPhase3Inner").style.display="none";$("todNextTurnBtn").style.display="none";
 $("todChooserName").textContent=chooser+" يختار(ة)";
 $("todTargetName").textContent=target;
 
@@ -722,10 +724,8 @@ $("todPhase1").querySelectorAll(".tod-btn").forEach(b=>{b.disabled=false;b.style
 
 window.todChoose=function(choice){
 todState.currentChoice=choice;
-const target=todState.chooserIsHost?todState.joinerName:todState.hostName;
 const pool=choice==="truth"?todTruthPool:todDarePool;
 const q=pool.length>0?pool[Math.floor(Math.random()*pool.length)]:"مفيش سؤال متبقى!";
-
 todState.results[todState.round]={choice,question:q};
 
 $("todPhase1").style.display="none";
@@ -735,6 +735,13 @@ $("todTypeBadge").className="tod-type-badge "+(choice==="truth"?"truth-badge":"d
 $("todQuestion").textContent=q;
 
 const amTarget=(todState.chooserIsHost&&!todState.isHost)||(!todState.chooserIsHost&&todState.isHost);
+const myOrder=todState.isHost?"h":"j";
+
+update(todState.roomRef,{
+currentPick:{choice,question:q,accepted:null},
+pickPlayer:myOrder
+});
+
 if(amTarget){
 $("todAnswerBtns").style.display="flex";
 $("todTimer").textContent="🔔 دورك! شريحتك اختارتلك: "+(choice==="truth"?"صراحة 🟢":"تحدي 🔴");
@@ -744,34 +751,74 @@ $("todTimer").textContent="⏳ مستنيين "+target+" يرد...";
 }
 };
 
+function todShowPick(p){
+todState.currentPick=p;
+const myOrder=todState.isHost?"h":"j";
+const amTarget=(todState.chooserIsHost&&!todState.isHost)||(!todState.chooserIsHost&&todState.isHost);
+
+$("todTypeBadge").textContent=p.choice==="truth"?"صراحة 🟢":"تحدي 🔴";
+$("todTypeBadge").className="tod-type-badge "+(p.choice==="truth"?"truth-badge":"dare-badge");
+$("todQuestion").textContent=p.question;
+
+/* RESOLVED */
+if(p.accepted!==null&&p.accepted!==undefined){
+$("todPhase1").style.display="none";
+$("todPhase2").style.display="none";
+$("todPhase3").style.display="block";
+$("todPhase3Inner").style.display="block";
+if(p.accepted===true){
+$("todPenalty").textContent="ما شاء الله! نجح(ت) بجدارة! 🎉";
+}else{
+$("todPenalty").textContent=p.penalty;
+}
+$("todNextTurnBtn").style.display="block";
+return;
+}
+
+/* STILL WAITING FOR ANSWER */
+$("todPhase1").style.display="none";
+$("todPhase3").style.display="none";
+$("todPhase2").style.display="block";
+
+if(amTarget){
+$("todAnswerBtns").style.display="flex";
+$("todTimer").textContent="🔔 دورك! شريحتك اختارها: "+(p.choice==="truth"?"صراحة 🟢":"تحدي 🔴");
+}else{
+$("todAnswerBtns").style.display="none";
+$("todTimer").textContent="⏳ مستنيين الرد...";
+}
+}
+
 window.todAccept=function(){
-const h=todState.results[todState.round]||{};
-todState.results[todState.round]={choice:h.choice,question:h.question,accepted:true,player:todState.isHost?"h":"j"};
-update(todState.roomRef,{results:todState.results});
-todNextTurnFromAccept();
+const p=todState.currentPick||{};
+todState.results[todState.round]={choice:p.choice,question:p.question,accepted:true,player:todState.isHost?"h":"j"};
+update(todState.roomRef,{currentPick:{choice:p.choice,question:p.question,accepted:true},results:todState.results});
 };
 
 function todNextTurnFromAccept(){
-$("todPhase2").style.display="none";
-$("todPhase3").style.display="block";
-$("todPenalty").textContent="ما شاء الله! نجح(ت) بجدارة! 🎉";
 window.todNextTurn();
 }
 
 window.todRefuse=function(){
-const isHostPlayer=todState.isHost;
-if(isHostPlayer)todState.hostRefusals++;else todState.joinerRefusals++;
-todState.results[todState.round].accepted=false;
-todState.results[todState.round].refusedBy=todState.isHost?"h":"j";
-
+const p=todState.currentPick||{};
 const penalty=todPenaltyPool.length>0?todPenaltyPool[Math.floor(Math.random()*todPenaltyPool.length)]:"قول 'بحبك' 5 مرات! 💕";
-$("todPhase2").style.display="none";
-$("todPhase3").style.display="block";
-$("todPenalty").textContent=penalty;
-$("todScoreLive").textContent="💛 "+todState.hostRefusals+" - "+todState.joinerRefusals;
+const refusing=todState.isHost?"h":"j";
 
-update(todState.roomRef,{hostRefusals:todState.hostRefusals,joinerRefusals:todState.joinerRefusals,results:todState.results});
+const newH=todState.isHost?todState.hostRefusals+1:todState.hostRefusals;
+const newJ=todState.isHost?todState.joinerRefusals:todState.joinerRefusals+1;
+todState.hostRefusals=newH;todState.joinerRefusals=newJ;
+todState.results[todState.round]={choice:p.choice,question:p.question,accepted:false,player:todState.isHost?"h":"j"};
+
+update(todState.roomRef,{
+currentPick:{choice:p.choice,question:p.question,accepted:false,penalty,refusedBy:refusing},
+hostRefusals:newH,
+joinerRefusals:newJ,
+results:todState.results
+});
+$("todScoreLive").textContent="💛 "+newH+" - "+newJ;
 };
+
+
 
 window.todNextTurn=function(){
 const nextRound=todState.round+1;
@@ -780,8 +827,8 @@ update(todState.roomRef,{status:"finished"});
 return;
 }
 const nextChooser=!todState.chooserIsHost;
-update(todState.roomRef,{round:nextRound,chooserIsHost:nextChooser});
-todState.round=nextRound;todState.chooserIsHost=nextChooser;todShowTurn();
+update(todState.roomRef,{round:nextRound,chooserIsHost:nextChooser,currentPick:null});
+todState.round=nextRound;todState.chooserIsHost=nextChooser;todState.currentPick=null;todShowTurn();
 };
 
 function todShowResults(){

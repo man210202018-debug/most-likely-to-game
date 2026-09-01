@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: #0d0a1a;
+  color: #fff;
+  margin: 0;
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .shuruq-title {
+    font-family: 'Aref Ruqaa', serif;
+    background: linear-gradient(135deg,#e8c4c8 0%,#fff 25%,#d4a0a7 50%,#fff 75%,#b76e79 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 4s linear infinite;
+  }
+}

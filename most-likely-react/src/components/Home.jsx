@@ -32,7 +32,7 @@ export default function Home({ onSelect }) {
   return (
     <div className="relative min-h-screen w-full max-w-md mx-auto px-5 py-10">
       <div className="text-center mb-8">
-        <div className="text-5xl mb-3">🌹</div>
+        <div className="text-5xl mb-3">💗</div>
         <h1 className="shuruq-title text-6xl font-bold leading-tight">شروقتي</h1>
         <p className="text-white/50 text-sm mt-2">لعبة للأحبة العبوا مع بعض 💕</p>
       </div>

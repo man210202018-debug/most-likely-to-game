@@ -19,6 +19,7 @@ export default function MltGame({ onBack }) {
   const [waitMsg, setWaitMsg] = useState('')
   const [joinReady, setJoinReady] = useState(false)
   const [startBtnText, setStartBtnText] = useState('ابدأ اللعبة! 🎉')
+  const [solo, setSolo] = useState(false)
 
   // game state
   const [allQs, setAllQs] = useState([])
@@ -43,6 +44,8 @@ export default function MltGame({ onBack }) {
   const stateRef = useRef({ hasVoted: false, curQ: 0, prevQ: -1 })
   const isHostRef = useRef(false)
   isHostRef.current = isHost
+  const soloRef = useRef(false)
+  soloRef.current = solo
   const scoresRef = useRef({ h: 0, j: 0 })
   scoresRef.current = scores
 
@@ -220,6 +223,7 @@ export default function MltGame({ onBack }) {
   }
 
   const castVote = (v) => {
+    if (soloRef.current) return soloVote(v)
     if (stateRef.current.hasVoted) return
     stateRef.current.hasVoted = true
     setHasVoted(true)
@@ -228,6 +232,7 @@ export default function MltGame({ onBack }) {
   }
 
   const skipQ = () => {
+    if (soloRef.current) return soloSkip()
     if (stateRef.current.hasVoted) return
     stateRef.current.hasVoted = true
     setHasVoted(true)
@@ -236,6 +241,7 @@ export default function MltGame({ onBack }) {
   }
 
   const nextQ = () => {
+    if (soloRef.current) return soloNext()
     dbGet(roomRef).then((snap) => {
       const room = snap.val()
       const nq = room.currentQ + 1
@@ -322,6 +328,143 @@ export default function MltGame({ onBack }) {
     navigator.clipboard.writeText(myCode).then(() => setWaitMsg('✅ تم النسخ!'))
   }
 
+  // Solo (local practice) mode — no partner, no Firebase room
+  const [soloHist, setSoloHist] = useState({})
+  const [soloScores, setSoloScores] = useState({ p1: 0, p2: 0 })
+  const [soloOpp, setSoloOpp] = useState('شريكك الافتراضي')
+
+  const startSolo = () => {
+    const n = name.trim() || 'أنت'
+    const qs = pickRoundQs()
+    setHostName(n)
+    setJoinerName(soloOpp)
+    setLbl1(n)
+    setLbl2(soloOpp)
+    setIsHost(true)
+    setAllQs(qs)
+    setTotalQ(PLAY_ROUND)
+    setScores({ h: 0, j: 0 })
+    setSoloScores({ p1: 0, p2: 0 })
+    setSoloHist({})
+    setCurQ(0)
+    stateRef.current = { hasVoted: false, curQ: 0, prevQ: -1 }
+    setSolo(true)
+    setVReveal(null)
+    setVStat('')
+    setShowNext(false)
+    setScreen('game')
+    setQuestion(qs[0])
+  }
+
+  const soloFinish = () => {
+    setResData({ hN: hostName, jN: soloOpp, h: soloScores.p1, j: soloScores.p2 })
+    const h = soloHist
+    let msg = ''
+    if (soloScores.p1 === soloScores.p2) msg = '<strong>' + hostName + '</strong> و<strong>' + soloOpp + '</strong> متساويين! 💕'
+    else if (Math.abs(soloScores.p1 - soloScores.p2) <= 3) msg = '<strong>' + hostName + '</strong> و<strong>' + soloOpp + '</strong> قريبين جداً! 💞'
+    else {
+      const top = soloScores.p1 > soloScores.p2 ? hostName : soloOpp
+      msg = '<strong>' + top + '</strong> عنده(ا) ' + Math.max(soloScores.p1, soloScores.p2) + ' تصويت! 🏆'
+    }
+    setResMsg(msg)
+    const titles = []
+    const details = []
+    allQs.forEach((q, i) => {
+      const r = h[i]
+      let b
+      if (!r) b = { cls: 'skip', txt: '⏭️ لم يُلعَب' }
+      else if (r.p1 === 'skip' || r.p2 === 'skip') b = { cls: 'skip', txt: '⏭️ تم التخطي' }
+      else if (r.p1 === r.p2) b = { cls: 'both', txt: '🤝 ' + (r.p1 === 3 ? 'محدش فينا' : r.p1 === 1 ? hostName : soloOpp) }
+      else b = { cls: 'diff', txt: (r.p1 === 3 ? 'محدش فينا' : hostName) + ' — ' + (r.p2 === 3 ? 'محدش فينا' : soloOpp) }
+      details.push({ q: q.e + ' ' + q.q, ...b })
+      if (r && r.p1 !== undefined && r.p1 !== 'skip' && r.p1 !== null && r.p1 !== 3)
+        titles.push({ name: hostName, text: q.q, cls: 'hb' })
+      if (r && r.p2 !== undefined && r.p2 !== 'skip' && r.p2 !== null && r.p2 !== 3 && r.p1 !== r.p2)
+        titles.push({ name: soloOpp, text: q.q, cls: 'jb' })
+    })
+    setResTitles(titles)
+    setResDetails(details)
+    setScreen('results')
+  }
+
+  const soloVote = (v) => {
+    if (stateRef.current.hasVoted) return
+    stateRef.current.hasVoted = true
+    setHasVoted(true)
+    setVStat('تصويتك: ' + (v === 1 ? hostName : v === 2 ? soloOpp : 'محدش فينا') + ' ⏳')
+    const ai = Math.floor(Math.random() * 3) + 1
+    setTimeout(() => {
+      const agree = ai === v
+      setScores((s) => {
+        const ns = { ...s }
+        if (agree) {
+          const player = v === 3 ? 'h' : v === 1 ? 'j' : 'h'
+          ns[player === 'h' ? 'h' : 'j'] = ns[player === 'h' ? 'h' : 'j'] + 1
+        }
+        return ns
+      })
+      setSoloScores((s) => {
+        if (agree) {
+          if (v === 1) return { p1: s.p1 + 1, p2: s.p2 }
+          if (v === 2) return { p1: s.p1, p2: s.p2 + 1 }
+          return { p1: s.p1 + 1, p2: s.p2 }
+        }
+        return s
+      })
+      const nameOf = (x) => (x === 1 ? hostName : x === 2 ? soloOpp : 'محدش فينا')
+      let html
+      if (agree) {
+        const ok = v === 3 ? 'محدش فينا' : v === 1 ? hostName : soloOpp
+        html = '<strong>' + ok + '</strong> هو(ي) الأكتر! 💕'
+      } else {
+        html = 'مختلفين! 🤔<br>' + nameOf(v) + ' ضد ' + nameOf(ai)
+      }
+      setVReveal({ type: agree ? 'agree' : 'disagree', html })
+      setShowNext(true)
+      setSoloHist((prev) => ({ ...prev, [curQ]: { p1: v, p2: ai } }))
+    }, 900)
+  }
+
+  const soloSkip = () => {
+    if (stateRef.current.hasVoted) return
+    stateRef.current.hasVoted = true
+    setHasVoted(true)
+    setVStat('تخطيت السؤال! ⏭️')
+    setShowNext(true)
+    setVReveal({ type: 'disagree', html: 'تم تخطي السؤال ⏭️' })
+    setSoloHist((prev) => ({ ...prev, [curQ]: { p1: 'skip', p2: 'skip' } }))
+  }
+
+  const soloNext = () => {
+    const nq = curQ + 1
+    if (nq >= allQs.length) return soloFinish()
+    stateRef.current = { hasVoted: false, curQ: nq, prevQ: curQ }
+    setCurQ(nq)
+    setHasVoted(false)
+    setVStat('')
+    setVReveal(null)
+    setShowNext(false)
+    setLastQ(nq + 1 >= allQs.length)
+    setQuestion(allQs[nq])
+  }
+
+  const playAgainSolo = () => {
+    const qs = pickRoundQs()
+    setAllQs(qs)
+    setSoloHist({})
+    setSoloScores({ p1: 0, p2: 0 })
+    setScores({ h: 0, j: 0 })
+    setCurQ(0)
+    stateRef.current = { hasVoted: false, curQ: 0, prevQ: -1 }
+    setHasVoted(false)
+    setVStat('')
+    setVReveal(null)
+    setShowNext(false)
+    setLastQ(false)
+    setScreen('game')
+    setQuestion(qs[0])
+  }
+
   // ---------- RENDER ----------
   if (screen === 'lobby') {
     return (
@@ -375,6 +518,12 @@ export default function MltGame({ onBack }) {
             </>
           )}
         </div>
+        <div className="mt-4 rounded-3xl backdrop-blur-xl border border-white/10 bg-white/5 p-4 text-center">
+          <div className="text-white/50 text-xs mb-2">تحب تجرب اللعبة لوحدك الأول؟</div>
+          <button onClick={startSolo} className="w-full py-3 rounded-xl border border-gold-gold/40 text-gold-light font-bold">
+            العب تجريبي لوحدك 🌿
+          </button>
+        </div>
         <div className="text-center text-white/30 text-xs mt-8">شروقتي ♡</div>
       </div>
     )
@@ -419,6 +568,11 @@ export default function MltGame({ onBack }) {
   if (screen === 'game') {
     return (
       <div className="relative min-h-screen w-full max-w-md mx-auto px-5 py-6">
+        {solo && (
+          <div className="mb-3 rounded-2xl border border-gold-gold/30 bg-gold-gold/10 py-2 px-4 text-center text-xs font-bold text-gold-light">
+            🌿 وضع تجريبي — بتلعب مع {soloOpp}. للعب بجد مع شريكك، ابنِ غرفة من الرئيسية.
+          </div>
+        )}
         <div className="flex justify-between items-center mb-3 text-sm font-bold">
           <span className="bg-white/10 px-3 py-1.5 rounded-full">{(curQ ) + 1} / {totalQ}</span>
           <span className="bg-white/10 px-3 py-1.5 rounded-full">💛 {scores.h} - {scores.j}</span>
@@ -526,7 +680,7 @@ export default function MltGame({ onBack }) {
           </div>
 
           <div className="flex gap-3">
-            <button onClick={playAgain} className="flex-1 py-3 rounded-xl bg-gradient-to-r from-rose-main to-violet-deep font-extrabold">
+            <button onClick={solo ? playAgainSolo : playAgain} className="flex-1 py-3 rounded-xl bg-gradient-to-r from-rose-main to-violet-deep font-extrabold">
               العب مرة ثانية 🔄
             </button>
             <button onClick={onBack} className="flex-1 py-3 rounded-xl border border-white/20 font-bold text-white/80">
